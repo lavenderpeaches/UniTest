@@ -1,12 +1,56 @@
 {% load static %}
-<!docttype html>
-<html lang = "en">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <title>LMAO</title>
+    <meta charset = 'UTF-8'>
+    <title>UniTest</title>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" type="text/css" href="{% static 'css\main.css' %}">
-
 </head>
+
 <body>
-    <h1>BAOOO</h1>
+    <div class="container">
+        <h1>UniTest</h1>
+        {% if page == 'login' %}
+        <div class="loginForm">
+            <h3>Login to your account</h3>
+    
+            <form action="{% url 'login' %}" method="POST">
+                {% csrf_token %}
+                <label for = "username">Username </label>
+                <input type = "text" placeholder = "Enter your username" name="username" required>
+
+                <label for = "password">Password</label>
+                <input type = "password" placeholder = "Enter your password" name = "password" required>
+
+                <button type="submit">Login</button>
+            </form>
+            <a href="{% url 'register'%}">Don't have an account?Register</a>
+        </div>
+        {% else %}
+        <div class = "registerForm">
+            <h3>Create an account</h3>
+            <form action = "{% url 'register'%}" method = "POST">
+                {% csrf_token %}
+                  <label for="email">Email</label>
+                  <input type="text" placeholder="Enter Email" name="email" required>
+
+                  <label for="username">Username</label>
+                  <input type="text" placeholder="Enter Username" name="username" required>
+              
+                  <label for="password"><b>Password</b></label>
+                  <input type="password" placeholder="Enter Password" name="password" required>
+              
+                  <label for="psw-repeat"><b>Repeat Password</b></label>
+                  <input type="password" placeholder="Repeat Password" name="psw-repeat" required>
+        
+                  <button type="submit">Register</button>
+        
+                  <p>Already have an account? <a href="{% url 'login'%}">Login</a>.</p>
+                
+              </form>
+        </div>
+        {% endif %}
+    </div>
 </body>
 </html>
