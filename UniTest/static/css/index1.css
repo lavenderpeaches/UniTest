@@ -1,0 +1,162 @@
+body{
+    background-color: #F3F4F6;
+    height: 100vh;
+    padding: 0px;
+    margin: 0px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container1{
+    height: 470px;
+    width: 450px;
+    background-color: #FFFFFF;
+    border: 1px solid #E7E8E9;
+    border-radius: 8px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.loginForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+h1{
+    font-family: "Poppins", serif;
+    font-size: 1.875rem;
+    font-weight: 600;
+    text-align: center;
+    color: #2563EB;
+}
+
+.loginForm form{
+    height: 260px;
+    margin-top: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.loginForm h3{
+    font-family: "Poppins", serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-top: -10px;
+}
+
+.loginForm label{
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.loginForm input{
+    font-family: "Poppins", serif;
+    color: #E4E4E7;
+    width: 360px;
+    height: 35px;
+    padding-left: 10px;
+    border: 1px solid #E4E4E7;
+    border-radius: 5px;
+}
+
+#loginButton{
+    background-color: black;
+    border: none;
+    color: white;
+    font-family: "Poppins", serif;
+    border-radius: 5px;
+    height: 38px;
+    margin-top: 30px;
+}
+
+#loginButton:hover {
+    background-color: #333; 
+    cursor: pointer; 
+}
+
+.loginForm a{
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    text-decoration: none;
+}
+
+.loginForm a:hover {
+    text-decoration: underline;
+}
+
+#pw{
+    margin-top: 16px;
+}
+
+.container2{
+    height: 650px;
+    width: 450px;
+    background-color: #FFFFFF;
+    border: 1px solid #E7E8E9;
+    border-radius: 8px;
+    box-shadow: 4px 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+.registerForm{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.registerForm form{
+    height: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.registerForm h3{
+    font-family: "Poppins", serif;
+    font-weight: 600;
+    font-size: 1.5rem;
+    margin-top: -5px;
+}
+
+.registerForm label{
+    font-family: "Poppins", serif;
+    font-weight: 400;
+    font-size: 15px;
+}
+
+.registerForm input{
+    font-family: "Poppins", serif;
+    color: #E4E4E7;
+    width: 350px;
+    height: 30px;
+    padding-left: 10px;
+    border: 1px solid #E4E4E7;
+    border-radius: 5px;
+}
+
+#registerButton{
+    background-color: black;
+    border: none;
+    color: white;
+    font-family: "Poppins", serif;
+    border-radius: 5px;
+    height: 40px;
+}
+
+#registerButton:hover {
+    background-color: #333; 
+    cursor: pointer; 
+}
+
+.registerForm a{
+    font-family: Arial, Helvetica, sans-serif;
+    color: black;
+    text-decoration: none;
+    margin-top: 35px;
+}
+
+.registerForm a:hover {
+    text-decoration: underline;
+}
