@@ -32,7 +32,9 @@ def registerPage(request):
         email = request.POST.get("email")
         username = request.POST.get("username")
         password = request.POST.get("password")
-        password2 = request.POST.get("psw-repeat")
+        password2 = request.POST.get("password2")
+
+        print(email,username,password,password2)
 
         if password != password2:
             messages.error(request, "Password do not match")

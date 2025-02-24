@@ -54,7 +54,7 @@ h1{
 
 .loginForm input{
     font-family: "Poppins", serif;
-    color: #E4E4E7;
+    color: black;
     width: 360px;
     height: 35px;
     padding-left: 10px;
@@ -128,7 +128,7 @@ h1{
 
 .registerForm input{
     font-family: "Poppins", serif;
-    color: #E4E4E7;
+    color: black;
     width: 350px;
     height: 30px;
     padding-left: 10px;
@@ -159,4 +159,9 @@ h1{
 
 .registerForm a:hover {
     text-decoration: underline;
+}
+
+.loginForm input::placeholder,
+.registerForm input::placeholder {
+    color: #A1A1AA; 
 }
