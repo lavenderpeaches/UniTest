@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+{% block content %}
+    <div class = "create_test">
+        <p id="heading1">Create a Test</p>
+        <form action  = "{% url 'create_test' %}" type = "POST">
+            {% csrf_token %}
+            {% for field in form %}
+                <div class="form-group">
+                    {{ field.label_tag }}
+                    {{ field }}
+                </div>
+            {% endfor %}
+            <button type = "submit">Submit</button>
+        </form>
+    </div>
+{% endblock %}

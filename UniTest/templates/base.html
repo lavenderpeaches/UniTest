@@ -51,11 +51,15 @@
                             <span>Settings</span>
                         </a>
                         <div class="dropdown-divider"></div>
-                        <a href="#" class="dropdown-item">
-                            <i class="fas fa-sign-out-alt"></i>
-                            <span>Log out</span>
-                        </a>
-                    </div>
+                            <li class="dropdown-item">
+                                <form action="{% url 'logout' %}" method="post" style="display: inline;">
+                                    {% csrf_token %}
+                                    <button class="sign-up-button" type="submit" style="border: none; background: none; padding: 0; cursor: pointer;">
+                                        <i class="fas fa-sign-out-alt"></i> Log out
+                                    </button>
+                                </form>
+                            </li>
+                        </div>
                 </div>
             </div>
         </header>
@@ -67,7 +71,7 @@
                     <div class="side-nav-group">
                         <h2 class="side-nav-title">Test Management</h2>
                         <div class="side-nav-menu">
-                            <a href="/create-test" class="side-nav-link">
+                            <a href= "{% url 'create_test' %}" class="side-nav-link">
                                 <i class="fas fa-plus-circle text-green"></i>
                                 <span>Create Test</span>
                             </a>

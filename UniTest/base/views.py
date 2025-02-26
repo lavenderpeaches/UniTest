@@ -1,11 +1,11 @@
-from django.contrib.auth.models import User
-from django.shortcuts import render,redirect
-from django.http import HttpResponse
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.models     import User
+from django.shortcuts               import render,redirect
+from django.http                    import HttpResponse
+from django.contrib.auth            import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
-from django.contrib import messages
-from django.urls import reverse_lazy
-
+from django.contrib                 import messages
+from django.urls                    import reverse_lazy
+from .forms                         import testForm
 # Create your views here.
 
 def home(request):
@@ -68,3 +68,8 @@ def logoutUser(request):
 @login_required
 def homePage(request):
     return render(request,'homePage.html');
+
+@login_required
+def create_test(request):
+    form = testForm()
+    return render(request, 'create_test.html',{'form':form})

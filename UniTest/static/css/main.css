@@ -423,3 +423,74 @@ a {
         display: none;
     }
 }
+
+.create_test{
+    display: flex;
+    flex-direction: column;
+    margin-left: 70px;
+    margin-top: 40px;
+    gap:30px;
+}
+
+.create_test form{
+    display: flex;
+    flex-direction: column;
+    gap:20px;
+}
+
+#heading1{
+    font-family: "Poppins", serif;
+    color: black;
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.form-group{
+    display: flex;
+    flex-direction: column;
+    gap:8px;
+}
+
+.form-group label{
+    font-family: "Poppins",serif;
+    color: black;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.form-group input{
+    font-family: "Poppins", serif;
+    color: black;
+    width: 500px;
+    height: 35px;
+    padding-left: 10px;
+    border: 1px solid #E4E4E7;
+    border-radius: 5px;
+}
+
+.form-group select {
+    font-family: "Poppins", serif;
+    color: black;
+    width: 500px;
+    height: 35px; 
+    padding-left: 10px;
+    border: 1px solid #E4E4E7;
+    border-radius: 5px;
+    background-color: white;
+    cursor: pointer;
+}
+
+
+.create_test button{ 
+    background-color: black;
+    border: none;
+    color: white;
+    font-family: "Poppins", serif;
+    border-radius: 5px;
+    height: 40px;
+}
+
+.create_test button:hover {
+    background-color: #333; 
+    cursor: pointer; 
+}
