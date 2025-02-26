@@ -1,15 +1,115 @@
-{%load static%}
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset = 'UTF-8'>
-    <title>Home</title>
+    <title>Dashboard - University Test Platform</title>
+    <link rel="stylesheet" href="{% static 'css/main.css' %}">
     <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
 </head>
 
 <body>
+    <div class="layout">
+        <!-- Top Navigation Bar -->
+        <header class="top-nav">
+            <div class="logo">
+                <span class="logo-text">UniTest</span>
+            </div>
+            <nav class="main-nav">
+                <a href="/" class="nav-link active">
+                    <i class="fas fa-home"></i>
+                    Home
+                </a>
+                <a href="/dashboard" class="nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    Dashboard
+                </a>
+                <a href="/settings" class="nav-link">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </a>
+            </nav>
+            <div class="user-nav">
+                <div class="user-dropdown">
+                    <button class="avatar-btn">
+                        <img src="https://randomuser.me/api/portraits/men/1.jpg" alt="User avatar" class="avatar" />
+                    </button>
+                    <div class="dropdown-menu">
+                        <div class="dropdown-header">
+                            <p class="user-name">Dr. Smith</p>
+                            <p class="user-email">smith@university.edu</p>
+                        </div>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-user"></i>
+                            <span>Profile</span>
+                        </a>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-cog"></i>
+                            <span>Settings</span>
+                        </a>
+                        <div class="dropdown-divider"></div>
+                        <a href="#" class="dropdown-item">
+                            <i class="fas fa-sign-out-alt"></i>
+                            <span>Log out</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </header>
+    
+        <div class="content-wrapper">
+            <!-- Side Navigation -->
+            <aside class="side-nav">
+                <div class="side-nav-content">
+                    <div class="side-nav-group">
+                        <h2 class="side-nav-title">Test Management</h2>
+                        <div class="side-nav-menu">
+                            <a href="/create-test" class="side-nav-link">
+                                <i class="fas fa-plus-circle text-green"></i>
+                                <span>Create Test</span>
+                            </a>
+                            <a href="/active-tests" class="side-nav-link">
+                                <i class="fas fa-edit text-blue"></i>
+                                <span>Active Tests</span>
+                            </a>
+                            <a href="/past-tests" class="side-nav-link">
+                                <i class="fas fa-history text-orange"></i>
+                                <span>Past Tests</span>
+                            </a>
+                            <a href="/analytics" class="side-nav-link">
+                                <i class="fas fa-chart-line text-purple"></i>
+                                <span>Analytics</span>
+                            </a>
+                            <a href="/question-bank" class="side-nav-link">
+                                <i class="fas fa-book-open text-yellow"></i>
+                                <span>Question Bank</span>
+                            </a>
+                            <a href="/students" class="side-nav-link">
+                                <i class="fas fa-users text-pink"></i>
+                                <span>Students</span>
+                            </a>
+                            <a href="/courses" class="side-nav-link">
+                                <i class="fas fa-graduation-cap text-cyan"></i>
+                                <span>Courses</span>
+                            </a>
+                            <a href="/reports" class="side-nav-link">
+                                <i class="fas fa-file-alt text-red"></i>
+                                <span>Reports</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+
     {% block content %}
     
     {% endblock %}
+
+    <script src="{% static 'js/dash.js' %}"></script>
+
+
 </body>
 </html>

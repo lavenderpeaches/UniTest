@@ -1,8 +1,175 @@
-{% extends "base.html" %}
+{% extends "base.html" %} 
+{% load static %}
+
 {% block content %}
-<h1>BELCUM BELCUM</h1>
-<form action="{% url 'logout' %}" method="post">
-    {% csrf_token %}
-    <button class="sign-up-button" type="submit">Logout</button>
-</form>
+
+    <!-- Main Content -->
+        <main class="main-content">
+            <div class="dashboard">
+                <div class="dashboard-header">
+                    <h1 class="dashboard-title">Dashboard</h1>
+                </div>
+
+                <!-- Stats Cards -->
+                <div class="stats-grid">
+                    <div class="stats-card">
+                        <div class="stats-card-header">
+                            <h3 class="stats-card-title">Active Tests</h3>
+                            <i class="fas fa-bolt stats-card-icon"></i>
+                        </div>
+                        <div class="stats-card-content">
+                            <div class="stats-value">3</div>
+                            <p class="stats-description">Currently in progress</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="stats-card-header">
+                            <h3 class="stats-card-title">Total Students</h3>
+                            <i class="fas fa-users stats-card-icon"></i>
+                        </div>
+                        <div class="stats-card-content">
+                            <div class="stats-value">245</div>
+                            <p class="stats-description">Across all courses</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="stats-card-header">
+                            <h3 class="stats-card-title">Tests This Week</h3>
+                            <i class="fas fa-clock stats-card-icon"></i>
+                        </div>
+                        <div class="stats-card-content">
+                            <div class="stats-value">12</div>
+                            <p class="stats-description">+2 from last week</p>
+                        </div>
+                    </div>
+
+                    <div class="stats-card">
+                        <div class="stats-card-header">
+                            <h3 class="stats-card-title">Average Score</h3>
+                            <i class="fas fa-chart-line stats-card-icon"></i>
+                        </div>
+                        <div class="stats-card-content">
+                            <div class="stats-value">78.2%</div>
+                            <p class="stats-description">Across all tests</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Recent and Upcoming Tests -->
+                <div class="tests-grid">
+                    <div class="tests-card recent-tests">
+                        <div class="tests-card-header">
+                            <h2 class="tests-card-title">Recent Tests</h2>
+                            <p class="tests-card-description">Overview of recently conducted tests and their statistics</p>
+                        </div>
+                        <div class="tests-card-content">
+                            <div class="test-item">
+                                <div class="test-info">
+                                    <p class="test-name">Database Management Systems</p>
+                                    <p class="test-meta">CS301 • Today</p>
+                                </div>
+                                <div class="test-stats">
+                                    <div class="test-stat">
+                                        <i class="fas fa-users"></i>
+                                        <span>45</span>
+                                    </div>
+                                    <div class="test-stat">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>82%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="test-item">
+                                <div class="test-info">
+                                    <p class="test-name">Computer Networks</p>
+                                    <p class="test-meta">CS402 • Yesterday</p>
+                                </div>
+                                <div class="test-stats">
+                                    <div class="test-stat">
+                                        <i class="fas fa-users"></i>
+                                        <span>38</span>
+                                    </div>
+                                    <div class="test-stat">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>75%</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="test-item">
+                                <div class="test-info">
+                                    <p class="test-name">Operating Systems</p>
+                                    <p class="test-meta">CS305 • 2 days ago</p>
+                                </div>
+                                <div class="test-stats">
+                                    <div class="test-stat">
+                                        <i class="fas fa-users"></i>
+                                        <span>42</span>
+                                    </div>
+                                    <div class="test-stat">
+                                        <i class="fas fa-chart-line"></i>
+                                        <span>79%</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tests-card upcoming-tests">
+                        <div class="tests-card-header">
+                            <h2 class="tests-card-title">Upcoming Tests</h2>
+                            <p class="tests-card-description">Tests scheduled for the next 7 days</p>
+                        </div>
+                        <div class="tests-card-content">
+                            <div class="test-item">
+                                <i class="fas fa-graduation-cap test-icon"></i>
+                                <div class="test-info">
+                                    <p class="test-name">Artificial Intelligence</p>
+                                    <p class="test-meta">CS401 • Tomorrow, 10:00 AM</p>
+                                </div>
+                                <div class="test-stats">
+                                    <div class="test-stat">
+                                        <i class="fas fa-users"></i>
+                                        <span>40</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="test-item">
+                                <i class="fas fa-graduation-cap test-icon"></i>
+                                <div class="test-info">
+                                    <p class="test-name">Software Engineering</p>
+                                    <p class="test-meta">CS306 • Wed, 2:00 PM</p>
+                                </div>
+                                <div class="test-stats">
+                                    <div class="test-stat">
+                                        <i class="fas fa-users"></i>
+                                        <span>35</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="test-item">
+                                <i class="fas fa-graduation-cap test-icon"></i>
+                                <div class="test-info">
+                                    <p class="test-name">Web Development</p>
+                                    <p class="test-meta">CS402 • Fri, 11:00 AM</p>
+                                </div>
+                                <div class="test-stats">
+                                    <div class="test-stat">
+                                        <i class="fas fa-users"></i>
+                                        <span>45</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</div>
 {% endblock %}
