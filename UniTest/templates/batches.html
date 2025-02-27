@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="batch-container">
+    <p class="batch-title">Batches</p>
+    
+    <div class="batch-content">
+        <div class="batch-list">
+            <p class="batch-list-title">Batch List</p>
+            {% for batch in batches %}
+                <div class="batch">
+                    <p class="batch-name">{{ batch.id }}. Name:{{ batch.batch_name }}</p>
+                    <p class="batch-session">Session: {{ batch.batch_session }}</p>
+                    <p class="batch-semester">Semester: {{ batch.semester }}th</p>
+                    <p class="batch-section">Section: {{ batch.batch_section }}</p>
+                </div>
+            {% empty %}
+                <p>No batches available.</p>
+            {% endfor %}
+        </div>
+
+        <div class="add-batch">
+            <p class="add-batch-title">Add Batch</p>
+            <form action="{% url 'batches' %}" method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="batch-form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <button class="add-batch-button">Add Batch</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,218 @@
+.batch-container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px; 
+    width: 80vw;
+}
+
+.batch-title{
+    font-family: "Roboto", sans-serif;
+    font-size: 25px;    
+    font-weight: 600;
+    color: black;
+}
+
+.batch-content {
+    display: flex;
+    flex-direction: row;  
+    align-items: flex-start;  
+    justify-content: space-around;
+}
+
+.batch-list{
+    width: 30vw;
+    border: 1.5px solid #E7E8E9;
+    border-radius: 8px;
+    padding: 20px;
+    gap:20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.batch-list-title{
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;    
+    font-weight: 600;
+    color: black;
+}
+
+.batch {
+    display: flex;
+    flex-direction: column; 
+    padding: 10px;
+    gap: 10px;
+    border: 1px solid #E7E8E9;
+    border-radius: 8px;
+}
+
+.batch p{
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;    
+    font-weight: 400;
+    color: black;
+}
+
+.add-batch{
+    width: 30vw;
+    padding: 20px;
+    border: 1.5px solid #E7E8E9;
+    border-radius: 8px;
+} 
+
+.add-batch-title{
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;    
+    font-weight: 600;
+    color: black;
+}
+
+.batch-form-group{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-top: 5px;
+}
+
+.batch-form-group label{
+    font-family: "Poppins",serif;
+    color: black;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.batch-form-group input{
+    font-family: "Poppins", serif;
+    color: black;
+    height: 35px;
+    padding-left: 10px;
+    border: 1px solid #E4E4E7;
+    border-radius: 5px;
+}
+
+.add-batch-button{
+    font-family: "Poppins", serif;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 5px;
+    height: 35px;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100px;
+}
+
+
+.add-batch-button:hover {
+    background-color: #333; 
+    cursor: pointer; 
+}
+
+.course-container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px; 
+    width: 80vw;
+}
+
+.course-title {
+    font-family: "Roboto", sans-serif;
+    font-size: 25px;    
+    font-weight: 600;
+    color: black;
+}
+
+.course-content {
+    display: flex;
+    flex-direction: row;  
+    align-items: flex-start;  
+    justify-content: space-around;
+}
+
+.course-list {
+    width: 30vw;
+    border: 1.5px solid #E7E8E9;
+    border-radius: 8px;
+    padding: 20px;
+    gap: 20px;
+    display: flex;
+    flex-direction: column;
+}
+
+.course-list-title {
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;    
+    font-weight: 600;
+    color: black;
+}
+
+.course {
+    display: flex;
+    flex-direction: column; 
+    padding: 10px;
+    gap: 10px;
+    border: 1px solid #E7E8E9;
+    border-radius: 8px;
+}
+
+.course p {
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;    
+    font-weight: 400;
+    color: black;
+}
+
+.add-course {
+    width: 30vw;
+    padding: 20px;
+    border: 1.5px solid #E7E8E9;
+    border-radius: 8px;
+} 
+
+.add-course-title {
+    font-family: "Roboto", sans-serif;
+    font-size: 20px;    
+    font-weight: 600;
+    color: black;
+}
+
+.course-form-group {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    margin-top: 5px;
+}
+
+.course-form-group label {
+    font-family: "Poppins", serif;
+    color: black;
+    font-size: 15px;
+    font-weight: 400;
+}
+
+.course-form-group input {
+    font-family: "Poppins", serif;
+    color: black;
+    height: 35px;
+    padding-left: 10px;
+    border: 1px solid #E4E4E7;
+    border-radius: 5px;
+}
+
+.add-course-button {
+    font-family: "Poppins", serif;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 5px;
+    height: 35px;
+    cursor: pointer;
+    margin-top: 15px;
+    width: 100px;
+}
+
+.add-course-button:hover {
+    background-color: #333; 
+    cursor: pointer; 
+}

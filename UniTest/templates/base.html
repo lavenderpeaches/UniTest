@@ -6,6 +6,7 @@
     <title>{% block title %}{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/dash.css' %}">
     <link rel="stylesheet" href="{% static 'css/create.css' %}">
+    <link rel="stylesheet" href="{% static 'css/batches.css' %}">
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -86,21 +87,17 @@
                                 <i class="fas fa-history text-orange"></i>
                                 <span>Past Tests</span>
                             </a>
-                            <a href="/analytics" class="side-nav-link">
-                                <i class="fas fa-chart-line text-purple"></i>
-                                <span>Analytics</span>
-                            </a>
-                            <a href="/question-bank" class="side-nav-link">
+                            <a href="{% url 'batches' %}" class="side-nav-link">
                                 <i class="fas fa-book-open text-yellow"></i>
-                                <span>Question Bank</span>
-                            </a>
-                            <a href="/students" class="side-nav-link">
-                                <i class="fas fa-users text-pink"></i>
-                                <span>Students</span>
+                                <span>Batches</span>
                             </a>
                             <a href="/courses" class="side-nav-link">
                                 <i class="fas fa-graduation-cap text-cyan"></i>
                                 <span>Courses</span>
+                            </a>
+                            <a href="/students" class="side-nav-link">
+                                <i class="fas fa-users text-pink"></i>
+                                <span>Students</span>
                             </a>
                             <a href="/reports" class="side-nav-link">
                                 <i class="fas fa-file-alt text-red"></i>

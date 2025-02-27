@@ -1,0 +1,34 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="course-container">
+    <p class="course-title">Courses</p>
+    
+    <div class="course-content">
+        <div class="course-list">
+            <p class="course-list-title">Course List</p>
+            {% for course in all_courses %}
+                <div class="course">
+                    <p class="course-name">{{ course.id }}. Name: {{ course.course_name }}</p>
+                    <p class="course-code">Course Code: {{ course.course_code }}</p>
+                </div>
+            {% empty %}
+                <p>No courses available.</p>
+            {% endfor %}
+        </div>
+
+        <div class="add-course">
+            <p class="add-course-title">Add Batch</p>
+            <form action="{% url 'courses' %}" method="post">
+                {% csrf_token %}
+                {% for field in form %}
+                    <div class="course-form-group">
+                        {{ field.label_tag }}
+                        {{ field }}
+                    </div>
+                {% endfor %}
+                <button class="add-course-button">Add course</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}
