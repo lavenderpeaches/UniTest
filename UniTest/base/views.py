@@ -1,5 +1,5 @@
 from django.contrib.auth.models     import User
-from django.shortcuts               import render,redirect
+from django.shortcuts               import render, redirect
 from django.http                    import HttpResponse
 from django.contrib.auth            import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
@@ -68,12 +68,17 @@ def logoutUser(request):
 
 @login_required
 def homePage(request):
-    return render(request,'homePage.html');
+    return render(request,'homePage.html')
 
 @login_required
 def create_test(request):
-    form = testForm()
-    return render(request, 'create_test.html',{'form':form})
+    if request.method == 'POST':
+        form = TestForm(request.POST)
+        if form.is_valid():
+            form.save()
+    else:
+        form = TestForm()
+    return render(request, 'create_test.html', {'form': form})
 
 @login_required
 def adding_questions(request):
