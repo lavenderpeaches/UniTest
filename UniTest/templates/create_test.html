@@ -10,7 +10,8 @@
         <p class="text-muted">Create a new multiple choice question test for your students.</p>
     </div>
 
-    <form id="testForm">
+    <form id="testForm" method="post" action="{% url 'create_test' %}">
+        {% csrf_token %}
         <!-- Test Details Card -->
         <div class="card">
             <div class="card-content">
