@@ -1,32 +1,53 @@
 {% extends 'base.html' %}
 {% block content %}
-<div class="course-container">
-    <p class="course-title">Courses</p>
+<div class="container">
+    <h1>Courses</h1>
+    <p class="subtitle">Manage your courses and create new ones.</p>
     
-    <div class="course-content">
+    <div class="courses-content">
         <div class="course-list">
-            <p class="course-list-title">Course List</p>
-            {% for course in all_courses %}
-                <div class="course">
-                    <p class="course-name">{{ course.id }}. Name: {{ course.course_name }}</p>
-                    <p class="course-code">Course Code: {{ course.course_code }}</p>
-                </div>
-            {% empty %}
-                <p>No courses available.</p>
-            {% endfor %}
+            <h2>Course List</h2>
+            <p>View and manage your existing courses</p>
+            
+            <div class="course-cards">
+                {% for course in all_courses %}
+                    <div class="course-card">
+                        <div class="course-header">
+                            <div>
+                                <h3>{{ course.course_name }}</h3>
+                                <span class="badge">{{ course.course_code }}</span>
+                            </div>
+                            <div class="course-actions">
+                                <button class="icon-button" aria-label="Edit course">
+                                    <i data-lucide="edit"></i>
+                                </button>
+                                <button class="icon-button" aria-label="Delete course">
+                                    <i data-lucide="trash-2"></i>
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <p>No courses available.</p>
+                {% endfor %}
+            </div>
         </div>
-
-        <div class="add-course">
-            <p class="add-course-title">Add Batch</p>
+        
+        <div class="course-form">
+            <h2>Add New Course</h2>
+            <p>Create a new course for your students</p>
+            
             <form action="{% url 'courses' %}" method="post">
                 {% csrf_token %}
                 {% for field in form %}
-                    <div class="course-form-group">
+                    <div class="form-group">
                         {{ field.label_tag }}
                         {{ field }}
                     </div>
                 {% endfor %}
-                <button class="add-course-button">Add course</button>
+                <button type="submit" class="button primary">
+                    Add Course
+                </button>
             </form>
         </div>
     </div>

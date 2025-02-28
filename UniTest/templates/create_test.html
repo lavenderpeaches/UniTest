@@ -1,4 +1,4 @@
-{% extends 'base.html' %} 
+{% extends 'base.html' %}
 {% load static %}
 
 {% block title %}Create Test | UniTest{% endblock %}
@@ -16,41 +16,15 @@
         <div class="card">
             <div class="card-content">
                 <div class="form-grid">
-                    <div class="form-item">
-                        <label for="title">Test Title</label>
-                        <input type="text" id="title" name="title" placeholder="Enter test title" required />
-                        <div class="error-message" id="title-error"></div>
-                    </div>
-
-                    <div class="form-item">
-                        <label for="course">Course</label>
-                        <select id="course" name="course" required>
-                            <option value="" disabled selected>Select course</option>
-                            <option value="CS301">CS301 - Database Management</option>
-                            <option value="CS302">CS302 - Data Structures</option>
-                            <option value="CS303">CS303 - Computer Networks</option>
-                        </select>
-                        <div class="error-message" id="course-error"></div>
-                    </div>
-
-                    <div class="form-item">
-                        <label for="duration">Duration (minutes)</label>
-                        <input type="number" id="duration" name="duration" value="30" min="1" required />
-                        <div class="error-message" id="duration-error"></div>
-                    </div>
-
-                    <div class="form-item">
-                        <label for="totalMarks">Total Marks</label>
-                        <input type="number" id="totalMarks" name="totalMarks" value="20" min="1" required />
-                        <div class="error-message" id="totalMarks-error"></div>
-                    </div>
-
-                    <div class="form-item full-width">
-                        <label for="description">Description</label>
-                        <textarea id="description" name="description" placeholder="Enter test description or instructions"></textarea>
-                        <small class="description-text">Add any special instructions or description for the test.</small>
-                        <div class="error-message" id="description-error"></div>
-                    </div>
+                    {% for field in form %}
+                        <div class="form-item">
+                            {{ field.label_tag }}
+                            {{ field }}
+                            {% if field.errors %}
+                                <div class="error-message">{{ field.errors }}</div>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
                 </div>
             </div>
         </div>
