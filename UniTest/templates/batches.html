@@ -8,13 +8,16 @@
             <p class="batch-list-title">Batch List</p>
             {% for batch in batches %}
                 <div class="batch">
-                    <p class="batch-name">{{ batch.id }}. Name:{{ batch.batch_name }}</p>
+                    <p class="batch-name">{{ forloop.counter }}. Name:{{ batch.batch_name }}</p>
                     <p class="batch-session">Session: {{ batch.batch_session }}</p>
                     <p class="batch-semester">Semester: {{ batch.semester }}th</p>
                     <p class="batch-section">Section: {{ batch.batch_section }}</p>
                     <div class = "batch-buttons">
                         <button class = "edit-batch-button">Edit Batch</button>
-                        <button class = "delete-batch-button">Delete Batch</button>
+                        <form action="{% url 'delete_batch' batch.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button type="submit" class="delete-batch-button">Delete Batch</button>
+                        </form>
                     </div>
                 </div>
                 {% empty %}

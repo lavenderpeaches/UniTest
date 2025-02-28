@@ -7,6 +7,8 @@ from django.contrib                 import messages
 from django.urls                    import reverse_lazy
 from .forms                         import testForm, batchForm, courseForm
 from .models                        import Test, Batch, Course
+from django.shortcuts               import get_object_or_404
+
 # Create your views here.
 
 def home(request):
@@ -119,7 +121,16 @@ def courses(request):
     else:    
         form = courseForm()
     context     = {
-                    'all_courses': all_courses,
+                    'all_courses': sorted_courses,
                     'form': form,  
                   }
     return render(request, 'courses.html',context)
+
+def delete_batch(request, batch_id):
+    batch = get_object_or_404(Batch, id=batch_id)
+
+    if request.method == "POST":
+        batch.delete()
+        return redirect('batches')  
+
+    return render(request, 'batches.html') 
