@@ -73,11 +73,11 @@ def homePage(request):
 @login_required
 def create_test(request):
     if request.method == 'POST':
-        form = TestForm(request.POST)
+        form = testForm(request.POST)
         if form.is_valid():
             form.save()
     else:
-        form = TestForm()
+        form = testForm()
     return render(request, 'create_test.html', {'form': form})
 
 @login_required

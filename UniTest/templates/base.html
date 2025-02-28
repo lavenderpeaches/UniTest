@@ -7,6 +7,7 @@
     <link rel="stylesheet" href="{% static 'css/dash.css' %}">
     <link rel="stylesheet" href="{% static 'css/create.css' %}">
     <link rel="stylesheet" href="{% static 'css/batches.css' %}">
+    <link rel="stylesheet" href="{% static 'css/course.css' %}">
     <meta name='viewport' content='width=device-width, initial-scale=1'>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -25,10 +26,6 @@
                 <a href="{% url 'homePage' %}" class="nav-link active">
                     <i class="fas fa-home"></i>
                     Home
-                </a>
-                <a href="/dashboard" class="nav-link">
-                    <i class="fas fa-chart-bar"></i>
-                    Dashboard
                 </a>
                 <a href="/settings" class="nav-link">
                     <i class="fas fa-cog"></i>
@@ -114,7 +111,9 @@
 
     <script src="{% static 'js/dash.js' %}"></script>
     <script src="{% static 'js/create.js' %}"></script>
-
-
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script>
+        lucide.createIcons();
+    </script>
 </body>
 </html>

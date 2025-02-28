@@ -28,6 +28,7 @@
     gap:20px;
     display: flex;
     flex-direction: column;
+    background-color: white;
 }
 
 .batch-list-title{
@@ -58,6 +59,7 @@
     padding: 20px;
     border: 1.5px solid #E7E8E9;
     border-radius: 8px;
+    background-color: white;
 } 
 
 .add-batch-title{
@@ -108,111 +110,39 @@
     cursor: pointer; 
 }
 
-.course-container {
+.batch-buttons{
     display: flex;
-    flex-direction: column;
-    gap: 20px;
-    padding: 20px; 
-    width: 80vw;
+    flex-direction: row;
+    justify-content: space-between;
 }
 
-.course-title {
-    font-family: "Roboto", sans-serif;
-    font-size: 25px;    
-    font-weight: 600;
-    color: black;
-}
-
-.course-content {
-    display: flex;
-    flex-direction: row;  
-    align-items: flex-start;  
-    justify-content: space-around;
-}
-
-.course-list {
-    width: 30vw;
-    border: 1.5px solid #E7E8E9;
-    border-radius: 8px;
-    padding: 20px;
-    gap: 20px;
-    display: flex;
-    flex-direction: column;
-}
-
-.course-list-title {
-    font-family: "Roboto", sans-serif;
-    font-size: 20px;    
-    font-weight: 600;
-    color: black;
-}
-
-.course {
-    display: flex;
-    flex-direction: column; 
-    padding: 10px;
-    gap: 10px;
-    border: 1px solid #E7E8E9;
-    border-radius: 8px;
-}
-
-.course p {
-    font-family: "Roboto", sans-serif;
-    font-size: 16px;    
-    font-weight: 400;
-    color: black;
-}
-
-.add-course {
-    width: 30vw;
-    padding: 20px;
-    border: 1.5px solid #E7E8E9;
-    border-radius: 8px;
-} 
-
-.add-course-title {
-    font-family: "Roboto", sans-serif;
-    font-size: 20px;    
-    font-weight: 600;
-    color: black;
-}
-
-.course-form-group {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-around;
-    margin-top: 5px;
-}
-
-.course-form-group label {
-    font-family: "Poppins", serif;
-    color: black;
-    font-size: 15px;
-    font-weight: 400;
-}
-
-.course-form-group input {
-    font-family: "Poppins", serif;
-    color: black;
-    height: 35px;
-    padding-left: 10px;
-    border: 1px solid #E4E4E7;
-    border-radius: 5px;
-}
-
-.add-course-button {
+.edit-batch-button {
     font-family: "Poppins", serif;
     color: white;
     background-color: black;
     border: none;
     border-radius: 5px;
-    height: 35px;
+    padding: 8px 14px;
     cursor: pointer;
-    margin-top: 15px;
-    width: 100px;
 }
 
-.add-course-button:hover {
+.edit-batch-button:hover {
     background-color: #333; 
     cursor: pointer; 
 }
+
+.delete-batch-button {
+    font-family: "Poppins", serif;
+    color: white;
+    background-color: black;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    padding: 8px 14px;
+}
+
+.delete-batch-button:hover {
+    background-color: #333; 
+    cursor: pointer; 
+}
+
