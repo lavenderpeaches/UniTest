@@ -21,9 +21,12 @@
                                 <button class="icon-button" aria-label="Edit course">
                                     <i data-lucide="edit"></i>
                                 </button>
-                                <button class="icon-button" aria-label="Delete course">
-                                    <i data-lucide="trash-2"></i>
-                                </button>
+                                <form action = "{% url 'delete_course' course.id %}" method="POST">
+                                    {% csrf_token %}
+                                    <button class="icon-button" aria-label="Delete course">
+                                        <i data-lucide="trash-2"></i>
+                                    </button>
+                                </form>
                             </div>
                         </div>
                     </div>

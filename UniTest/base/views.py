@@ -121,7 +121,7 @@ def courses(request):
     else:    
         form = courseForm()
     context     = {
-                    'all_courses': sorted_courses,
+                    'all_courses': all_courses,
                     'form': form,  
                   }
     return render(request, 'courses.html',context)
@@ -134,3 +134,12 @@ def delete_batch(request, batch_id):
         return redirect('batches')  
 
     return render(request, 'batches.html') 
+
+def delete_course(request,course_id):
+    course = get_object_or_404(Course, id = course_id)
+
+    if request.method == "POST":
+        course.delete()
+        return redirect('courses')
+    
+    return render(request, 'courses.html')
