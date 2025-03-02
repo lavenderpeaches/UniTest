@@ -1,5 +1,5 @@
 from django  import forms
-from .models import Test, Batch, Course
+from .models import Test, Batch, Course, Question, Choice
 
 class testForm(forms.ModelForm):
     class Meta:

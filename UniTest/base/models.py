@@ -29,9 +29,10 @@ class Test(models.Model):
         return f"{self.name} | {self.course.course_name if self.course else 'N/A'} | {self.batch.batch_name} | {self.total_marks} marks | {self.total_questions} questions"
 
 class Question(models.Model):
-    test  = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='questions')
-    text  = models.TextField(help_text="The question text")
-    marks = models.IntegerField(default=1, help_text="Marks allocated for this question")
+    test        = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='questions')
+    text        = models.TextField(help_text="The question text")
+    marks       = models.IntegerField(default=1, help_text="Marks allocated for this question")
+    num_choices = models.IntegerField(default=4, help_text="Number of choices for this question")
 
     def __str__(self):
         return f"Q: {self.text[:50]}..."
@@ -42,4 +43,4 @@ class Choice(models.Model):
     is_correct = models.BooleanField(default=False, help_text="Indicates the correct answer")
 
     def __str__(self):
-        return self.text
+        return f"{self.question} | {self.text[:10]}..."

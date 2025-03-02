@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <header class="test-header">
+        <div class="university-info">
+            <h1>Amity University Punjab</h1>
+        </div>
+        <div class="test-info">
+            <p><strong>Class:</strong> {{batch.batch_name}}-{{batch.batch_section}}</p>
+            <p><strong>Year:</strong> {{batch.batch_session}}</p>
+            <p><strong>Semester:</strong> {{batch.semester}}</p>
+            <p><strong>Subject:</strong> {{course.course_name}} | {{course.course_code}}</p>
+        </div>
+    </header>
+
+    <main class="test-content">
+        <h2 class="test-name">{{ test.name }}</h2>
+        
+        <div class="test-metadata">
+            <p><i data-lucide="clock"></i> Duration:   {{ test.duration }}</p>
+            <p><i data-lucide="award"></i> Total Marks:  {{ test.total_marks }}</p>
+        </div>
+
+        <div class="questions-list">
+            {% for question in questions %}
+                <div class="question-card">
+                    <h3>Question {{ forloop.counter }}</h3>
+                    <p class="question-text">{{ question.text }}</p>
+                    <div class="options">
+                        {% for choice in question.choices.all %}
+                            <div class="option">
+                                <input type="radio" id="q{{ question.id }}_{{ forloop.counter }}" name="q{{ question.id }}" value="{{ choice.id }}">
+                                <label for="q{{ question.id }}_{{ forloop.counter }}">{{ choice.text }}</label>
+                                {% if choice.is_correct %}<strong>(Correct)</strong>{% endif %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    </main>
+</div>
+{% endblock %}
