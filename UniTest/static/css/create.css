@@ -64,7 +64,8 @@ h4 {
     background-color: white;
     border-radius: var(--radius);
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    margin-bottom: 1.5rem;
+    margin: 50px auto;
+    width: 800px;
 }
 
 .card-content {
@@ -289,4 +290,16 @@ textarea {
 .toast-description {
     font-size: 0.875rem;
     color: var(--muted-foreground);
+}
+
+.create-button {
+    border-radius: var(--radius);
+    font-size: 0.875rem;
+    font-weight: 500;
+    padding: 0.5rem 0.5rem;
+    cursor: pointer;
+    transition: background-color 0.2s, color 0.2s, border-color 0.2s;
+    border: 1px solid transparent;
+    background-color: var(--primary);
+    color: white;
 }
