@@ -35,7 +35,7 @@ class Question(models.Model):
     num_choices = models.IntegerField(default=4, help_text="Number of choices for this question")
 
     def __str__(self):
-        return f"Q: {self.text[:50]}..."
+        return f"Q: {self.text}"
 
 class Choice(models.Model):
     question   = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
@@ -43,4 +43,4 @@ class Choice(models.Model):
     is_correct = models.BooleanField(default=False, help_text="Indicates the correct answer")
 
     def __str__(self):
-        return f"{self.question} | {self.text[:10]}..."
+        return f"{self.question} | {self.text}"

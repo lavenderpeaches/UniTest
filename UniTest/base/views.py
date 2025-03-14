@@ -144,11 +144,11 @@ def batches(request):
             print("Form Errors:", form.errors)
     else:
         form = batchForm()
-    
+
     context = {
-                    'batches': all_batches,
-                    'form': form,  
-                }
+        'batches': all_batches,
+        'form': form,  
+    }
     return render(request, 'batches.html', context)
 
 def students(request):
@@ -166,10 +166,10 @@ def courses(request):
             print("Form Errors:", form.errors)
     else:    
         form = courseForm()
-    context     = {
-                    'all_courses': all_courses,
-                    'form': form,  
-                  }
+    context = {
+        'all_courses': all_courses,
+        'form': form,  
+    }
     return render(request, 'courses.html',context)
 
 def delete_batch(request, batch_id):
