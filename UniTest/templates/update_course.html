@@ -1,5 +1,36 @@
 {% extends 'base.html' %}
 {% block content %}
-<h1>Update course</h1>
-{{course}}
+
+<div class="container">
+    <a href = "{% url 'courses'%}">
+        <button id="backButton" class="button button-outline mb-5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Back to Courses
+        </button>
+    </a>
+    <h1>Update Course</h1>
+
+    <div id="updateBatchCard" class="card">
+        <header class="card-header">
+            <h2>Edit Course Details</h2>
+        </header>
+        <div class="card-content">
+            <form id="updateBatchForm" action="" method="POST" class="form">
+                {% csrf_token %}
+                
+                <label for="course_name">Course Name:</label>
+                <input type="text" id="course_name" name="course_name" value="{{ form.instance.course_name }}">
+            
+                <label for = "course_code">Course Code:</label>
+                <input type ="text" id="course_code" name="course_code" value="{{ form.instance.course_code }}">
+            
+                <button type="submit" id="updateButton" class="button">Update Batch</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
 {% endblock %}

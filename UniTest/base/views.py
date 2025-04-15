@@ -193,7 +193,16 @@ def delete_course(request,course_id):
 def update_course(request, course_id):
     course = Course.objects.get(id=course_id)
 
-    return render(request, 'update_course.html', {'course': course})
+    if request.method == 'POST':
+        form = courseForm(request.POST, instance=course)
+
+        if form.is_valid():
+            form.save()
+            return redirect('courses')
+    else:   
+        form = courseForm(instance=course)
+
+    return render(request, 'update_course.html', {'course': course, 'form':form})
 
 def update_batch(request, batch_id):
     batch = Batch.objects.get(id=batch_id)
