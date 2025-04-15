@@ -167,7 +167,7 @@ def courses(request):
     else:    
         form = courseForm()
     context     = {
-                    'all_courses': sorted_courses,
+                    'all_courses': all_courses,
                     'form': form,  
                   }
     return render(request, 'courses.html',context)
