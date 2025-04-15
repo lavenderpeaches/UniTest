@@ -217,3 +217,8 @@ def update_batch(request, batch_id):
         form = batchForm(instance=batch)
 
     return render(request, 'update_batch.html', {'batch': batch, 'form': form})
+
+@login_required
+def list_tests(request):
+    tests = Test.objects.all()
+    return render(request, 'list_tests.html', {'tests': tests})

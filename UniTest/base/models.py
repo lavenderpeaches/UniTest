@@ -24,6 +24,8 @@ class Test(models.Model):
     total_questions    = models.IntegerField()
     duration           = models.DurationField(help_text="Test duration (hh:mm:ss)")
     is_results_visible = models.BooleanField(default=False)
+    status             = models.BooleanField(default=False, help_text="False = Upcoming, True = Completed")
+    user               = models.ForeignKey('auth.User', on_delete=models.CASCADE, null=True, blank=True, default=None)
 
     def __str__(self):
         return f"{self.name} | {self.course.course_name if self.course else 'N/A'} | {self.batch.batch_name} | {self.total_marks} marks | {self.total_questions} questions"
@@ -40,7 +42,7 @@ class Question(models.Model):
 class Choice(models.Model):
     question   = models.ForeignKey(Question, on_delete=models.CASCADE, related_name='choices')
     text       = models.CharField(max_length=500, help_text="Choice text")
-    is_correct = models.BooleanField(default=False, help_text="Indicates the correct answer")
+    is_correct = models.BooleanField(default=False, null=False, help_text="Indicates the correct answer")
 
     def __str__(self):
         return f"{self.question} | {self.text}"

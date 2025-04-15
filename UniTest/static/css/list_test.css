@@ -1,0 +1,136 @@
+/* Test List Specific Styles */
+.test-list-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.5rem;
+}
+
+.test-filters {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+.filter-select {
+    padding: 0.5rem;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    font-size: 0.875rem;
+}
+
+.search-box {
+    display: flex;
+    align-items: center;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 0.5rem;
+    background-color: white;
+}
+
+.search-box input {
+    border: none;
+    outline: none;
+    background: transparent;
+    width: 200px;
+    font-size: 0.875rem;
+}
+
+.search-box i {
+    color: var(--muted-foreground);
+    margin-right: 0.5rem;
+}
+
+.test-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-bottom: 2rem;
+}
+
+.test-table th {
+    text-align: left;
+    padding: 1rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: var(--muted-foreground);
+    border-bottom: 1px solid var(--border);
+    background-color: #f9fafb;
+}
+
+.test-table td {
+    padding: 1rem;
+    font-size: 0.875rem;
+    border-bottom: 1px solid var(--border);
+    background-color: white;
+}
+
+.test-table tr:last-child td {
+    border-bottom: none;
+}
+
+.test-table tr:hover td {
+    background-color: #f9fafb;
+}
+
+.test-name-cell {
+    font-weight: 500;
+}
+
+.test-course {
+    font-size: 0.75rem;
+    color: var(--muted-foreground);
+    margin-top: 0.25rem;
+}
+
+.status-badge {
+    display: inline-block;
+    padding: 0.25rem 0.5rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-upcoming {
+    background-color: rgba(59, 130, 246, 0.1);
+    color: var(--blue);
+}
+
+.status-completed {
+    background-color: rgba(107, 114, 128, 0.1);
+    color: var(--muted-foreground);
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.action-btn {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    background-color: white;
+    color: var(--muted-foreground);
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.action-btn:hover {
+    background-color: #f3f4f6;
+}
+
+.edit-btn:hover {
+    color: var(--blue);
+    border-color: var(--blue);
+}
+
+.delete-btn:hover {
+    color: var(--red);
+    border-color: var(--red);
+}

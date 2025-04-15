@@ -4,7 +4,7 @@ from .models import Test, Batch, Course, Question, Choice
 class testForm(forms.ModelForm):
     class Meta: 
         model = Test   
-        exclude = ['is_results_visible']
+        exclude = ['is_results_visible', 'status', 'user']
 
 class batchForm(forms.ModelForm):
     class Meta:

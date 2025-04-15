@@ -1,0 +1,65 @@
+{% extends 'base.html' %}
+
+{% block title %}Test List | UniTest{% endblock %}
+
+{% block content %}
+<main class="main-content">
+    <div class="dashboard">
+        <div class="test-list-header">
+            <h1 class="dashboard-title">All Tests</h1>
+            <div class="test-filters">
+                <div class="search-box">
+                    <i class="fas fa-search"></i>
+                    <input type="text" placeholder="Search tests..." id="search-input">
+                </div>
+                <select class="filter-select" id="status-filter">
+                    <option value="all">All Status</option>
+                    <option value="upcoming">Upcoming</option>
+                    <option value="completed">Completed</option>
+                </select>
+                <select class="filter-select" id="course-filter">
+                    <option value="all">All Courses</option>
+                    <!-- Populate course options from backend -->
+                </select>
+            </div>
+        </div>
+
+        <!-- Test Table -->
+        <table class="test-table">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Test Name</th>
+                    <th>Course</th>
+                    <th>Batch</th>
+                    <th>Total Marks</th>
+                    <th>Total Questions</th>
+                    <th>Status</th>
+                    <th>Duration</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody id="test-table-body">
+                {% for test in tests %}
+                <tr>
+                    <td>{{ forloop.counter }}</td>
+                    <td><a href="{% url 'view_test' test.id %}">{{ test.name }}</a></td>
+                    <td>{{ test.course.course_name }}</td>
+                    <td>{{ test.batch.batch_name }}</td>
+                    <td>{{ test.total_marks }}</td>
+                    <td>{{ test.total_questions }}</td>
+                    <td>
+                        {% if test.status %}
+                            Completed
+                        {% else %}
+                            Upcoming
+                        {% endif %}
+                    </td>
+                    <td>{{ test.duration }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</main>
+{% endblock %}
