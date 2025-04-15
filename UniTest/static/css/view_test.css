@@ -1,0 +1,153 @@
+/* Base styles */
+:root {
+    --primary-color: #0070f3;
+    --background-color: #f0f0f0;
+    --card-background: #ffffff;
+    --text-color: #333333;
+    --muted-color: #666666;
+    --border-color: #e0e0e0;
+    --success-color: #28a745;
+    --warning-color: #ffc107;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+    line-height: 1.6;
+    color: var(--text-color);
+    background-color: var(--background-color);
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 2rem;
+}
+
+h1,
+h2,
+h3 {
+    margin-top: 0;
+}
+
+/* Test header styles */
+.test-header {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.university-info h1 {
+    font-size: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.university-info p {
+    color: var(--muted-color);
+    margin-bottom: 1rem;
+}
+
+.test-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0.5rem;
+}
+
+.test-info p {
+    margin: 0;
+}
+
+/* Test content styles */
+.test-content {
+    background-color: var(--card-background);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.test-name {
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+
+.test-metadata {
+    display: flex;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    color: var(--muted-color);
+}
+
+.test-metadata p {
+    display: flex;
+    align-items: center;
+    margin: 0;
+}
+
+.test-metadata i {
+    margin-right: 0.5rem;
+}
+
+/* Question styles */
+.questions-list {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.question-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+}
+
+.question-card h3 {
+    font-size: 1.2rem;
+    margin-bottom: 0.5rem;
+}
+
+.question-text {
+    margin-bottom: 1rem;
+}
+
+.options {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.option {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.option input[type='radio'] {
+    margin-right: 0.5rem;
+    width: 1rem;
+}
+
+/* Responsive adjustments */
+@media (max-width: 600px) {
+    .container {
+        padding: 1rem;
+    }
+
+    .test-info {
+        grid-template-columns: 1fr;
+    }
+
+    .test-metadata {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+}
+.option input[type='radio'] {
+    margin: 0; /* Remove default margin */
+}
+
+.option label {
+    margin: 0; /* Remove default margin */
+}
