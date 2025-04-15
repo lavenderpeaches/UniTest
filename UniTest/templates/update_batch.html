@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container">
+    <a href = "{% url 'batches'%}">
+        <button id="backButton" class="button button-outline mb-5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Back to Batches
+        </button>
+    </a>
+    <h1>Update Batch</h1>
+
+    <div id="batchNotFound" class="card hidden">
+        <div class="card-content">
+            <p>Batch not found. Please go back and select a valid batch.</p>
+        </div>
+    </div>
+
+    <div id="updateBatchCard" class="card">
+        <header class="card-header">
+            <h2>Edit Batch Details</h2>
+        </header>
+        <div class="card-content">
+            <form id="updateBatchForm" action="" method="POST" class="form">
+                {% csrf_token %}
+                
+                <label for="batch_name">Batch Name:</label>
+                <input type="text" id="batch_name" name="batch_name" value="{{ form.instance.batch_name }}">
+            
+                <label for="batch_section">Batch Section:</label>
+                <input type="text" id="batch_section" name="batch_section" value="{{ form.instance.batch_section }}">
+            
+                <label for="batch_session">Batch Session:</label>
+                <input type="text" id="batch_session" name="batch_session" value="{{ form.instance.batch_session }}">
+            
+                <label for="semester">Semester: </label>
+                <input type="number" id="semester" name="semester" value="{{ form.instance.semester }}">
+            
+                <button type="submit" id="updateButton" class="button">Update Batch</button>
+            </form>
+            
+        </div>
+    </div>
+</div>
+
+{% endblock %}

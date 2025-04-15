@@ -189,3 +189,22 @@ def delete_course(request,course_id):
         return redirect('courses')
     
     return render(request, 'courses.html')
+
+def update_course(request, course_id):
+    course = Course.objects.get(id=course_id)
+
+    return render(request, 'update_course.html', {'course': course})
+
+def update_batch(request, batch_id):
+    batch = Batch.objects.get(id=batch_id)
+
+    if request.method == 'POST':
+        form = batchForm(request.POST, instance=batch)
+
+        if form.is_valid():
+            form.save()
+            return redirect('batches') 
+    else:
+        form = batchForm(instance=batch)
+
+    return render(request, 'update_batch.html', {'batch': batch, 'form': form})
