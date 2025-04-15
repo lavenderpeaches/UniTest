@@ -13,7 +13,11 @@
                     <p class="batch-semester">Semester: {{ batch.semester }}th</p>
                     <p class="batch-section">Section: {{ batch.batch_section }}</p>
                     <div class = "batch-buttons">
-                        <button class = "edit-batch-button">Edit Batch</button>
+                        <form action ="{% url 'update_batch' batch.id %}" method="POST" style="display:inline;">
+                            {% csrf_token %}
+                            <button class = "edit-batch-button" type="submit">Edit Batch</button>
+                        </form>
+
                         <form action="{% url 'delete_batch' batch.id %}" method="POST" style="display:inline;">
                             {% csrf_token %}
                             <button type="submit" class="delete-batch-button">Delete Batch</button>

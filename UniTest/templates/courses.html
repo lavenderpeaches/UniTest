@@ -18,9 +18,13 @@
                                 <span class="badge">{{ course.course_code }}</span>
                             </div>
                             <div class="course-actions">
-                                <button class="icon-button" aria-label="Edit course">
-                                    <i data-lucide="edit"></i>
-                                </button>
+                                <form action ="{% url 'update_course' course.id %}" method="POST" style="display:inline;">
+                                    {% csrf_token %}
+                                    <button class="icon-button" aria-label="Edit course">
+                                        <i data-lucide="edit"></i>
+                                    </button>
+                                </form>
+                                
                                 <form action = "{% url 'delete_course' course.id %}" method="POST">
                                     {% csrf_token %}
                                     <button class="icon-button" aria-label="Delete course">
