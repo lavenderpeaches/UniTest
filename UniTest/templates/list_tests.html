@@ -1,8 +1,4 @@
-{% extends 'base.html' %}
-
-{% block title %}Test List | UniTest{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% block title %}Test List | UniTest{% endblock %} {% block content %}
 <main class="main-content">
     <div class="dashboard">
         <div class="test-list-header">
@@ -10,7 +6,7 @@
             <div class="test-filters">
                 <div class="search-box">
                     <i class="fas fa-search"></i>
-                    <input type="text" placeholder="Search tests..." id="search-input">
+                    <input type="text" placeholder="Search tests..." id="search-input" />
                 </div>
                 <select class="filter-select" id="status-filter">
                     <option value="all">All Status</option>
@@ -48,14 +44,25 @@
                     <td>{{ test.batch.batch_name }}</td>
                     <td>{{ test.total_marks }}</td>
                     <td>{{ test.total_questions }}</td>
-                    <td>
-                        {% if test.status %}
-                            Completed
-                        {% else %}
-                            Upcoming
-                        {% endif %}
-                    </td>
+                    <td>{% if test.status %} Completed {% else %} Upcoming {% endif %}</td>
                     <td>{{ test.duration }}</td>
+                    <td>
+                        <a href="">
+                            <div class="test-card-actions">
+                                <button class="action-btn edit-btn" title="Edit Test">
+                                    <i class="fas fa-pencil-alt"></i>
+                                </button>
+                        </a>
+                        <form action="{% url 'delete_test' test.id %}" method="POST" style="display: inline;">
+                            {% csrf_token %}
+                            <button class="action-btn delete-btn" title="Delete Test" onclick="return confirm('Are you sure you want to delete this
+                            test?');">
+                                <i class="fas fa-trash-alt"></i>
+                            </button>
+                            </div>
+                        </form>
+                        </a>
+                    </td>
                 </tr>
                 {% endfor %}
             </tbody>

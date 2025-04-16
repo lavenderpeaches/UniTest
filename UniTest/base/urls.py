@@ -17,5 +17,6 @@ urlpatterns = [
     path('students/',                      views.students,                      name = 'students'),
     path('update-course/<int:course_id>/', views.update_course,                 name = 'update_course'),
     path('update-batch/<int:batch_id>/',   views.update_batch,                  name = 'update_batch'),
-    path('tests/', views.list_tests, name='list_tests'),
+    path('tests/',                         views.list_tests,                    name = 'list_tests'),
+    path('tests/delete/<int:test_id>/',    views.delete_test,                   name = 'delete_test'),
 ]

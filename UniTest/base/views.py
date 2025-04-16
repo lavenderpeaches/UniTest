@@ -166,10 +166,10 @@ def courses(request):
             print("Form Errors:", form.errors)
     else:    
         form = courseForm()
-    context     = {
-                    'all_courses': all_courses,
-                    'form': form,  
-                  }
+    context = {
+        'all_courses': all_courses,
+        'form': form,  
+    }
     return render(request, 'courses.html',context)
 
 def delete_batch(request, batch_id):
@@ -181,7 +181,7 @@ def delete_batch(request, batch_id):
 
     return render(request, 'batches.html') 
 
-def delete_course(request,course_id):
+def delete_course(request, course_id):
     course = get_object_or_404(Course, id = course_id)
 
     if request.method == "POST":
@@ -222,3 +222,12 @@ def update_batch(request, batch_id):
 def list_tests(request):
     tests = Test.objects.all()
     return render(request, 'list_tests.html', {'tests': tests})
+
+@login_required
+def delete_test(request, test_id):
+    test = get_object_or_404(Test, id=test_id)
+    if request.method == "POST":
+        test.delete()
+        return redirect('list_tests')
+    
+    return render(request, 'list_tests.html')
