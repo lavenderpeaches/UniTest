@@ -1,0 +1,51 @@
+{% extends 'base.html' %} {% block content %}
+<div class="container">
+    <h2>Test Attempt Details</h2>
+    <div class="attempt-info">
+        <p><strong>Student:</strong> {{ attempt.student_name }}</p>
+        <p><strong>Email:</strong> {{ attempt.student_email }}</p>
+        <p><strong>Test:</strong> {{ attempt.test.name }}</p>
+        <p><strong>Start Time:</strong> {{ attempt.start_time }}</p>
+        <p><strong>End Time:</strong> {{ attempt.end_time }}</p>
+        <p><strong>Score:</strong> {% if attempt.score %}{{ attempt.score }}{% else %}-{% endif %}</p>
+    </div>
+    <h3>Answers</h3>
+    <ul class="answers-list">
+        {% if answers %} {% for answer in answers %}
+        <li>
+            <strong>{{ answer.question.text }}</strong>: {% if answer.choice %} {{ answer.choice.text }} {% if answer.choice.is_correct %}<span style="color: green">(Correct)</span>{% endif %} {% else %}
+            <span style="color: red">No Answer</span>
+            {% endif %}
+        </li>
+        {% endfor %} {% else %}
+        <li><span style="color: #888">No answers submitted for this attempt.</span></li>
+        {% endif %}
+    </ul>
+</div>
+<style>
+    .container {
+        max-width: 700px;
+        margin: 40px auto;
+        background: #fff;
+        border-radius: 8px;
+        padding: 32px;
+        box-shadow: 0 2px 12px rgba(0, 0, 0, 0.07);
+    }
+    h2 {
+        font-family: 'Poppins', serif;
+        font-size: 2rem;
+        margin-bottom: 18px;
+    }
+    .attempt-info p {
+        margin: 0 0 6px 0;
+        font-family: 'Poppins', serif;
+    }
+    .answers-list {
+        margin-top: 18px;
+    }
+    .answers-list li {
+        margin-bottom: 12px;
+        font-family: 'Poppins', serif;
+    }
+</style>
+{% endblock %}

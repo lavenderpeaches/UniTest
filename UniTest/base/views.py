@@ -6,8 +6,13 @@ from django.contrib.auth.decorators import login_required
 from django.contrib                 import messages
 from django.urls                    import reverse_lazy
 from .forms                         import testForm, batchForm, courseForm
-from .models                        import Test, Batch, Course,Question, Choice
+from .models                        import Test, Batch, Course,Question, Choice, TestCode, TestAttempt, Answer
 from django.shortcuts               import get_object_or_404
+from django.core.mail import send_mail
+from django.conf import settings
+from django.utils import timezone
+from datetime import timedelta
+from django.views.decorators.http import require_POST
 
 # Create your views here.
 
@@ -26,7 +31,7 @@ def loginUser(request):
     else:
         messages.error(request, "Wrong username or password. Please try again.")
 
-    return render(request, 'index.html')
+    return render(request, 'login.html')
     
 
 def registerPage(request):
@@ -231,3 +236,143 @@ def delete_test(request, test_id):
         return redirect('list_tests')
     
     return render(request, 'list_tests.html')
+
+@require_POST
+def generate_test_codes(request, test_id):
+    if not request.user.is_staff:
+        return HttpResponseForbidden()
+    test = get_object_or_404(Test, id=test_id)
+    codes = TestCode.objects.filter(test=test, is_used=False)
+    for code_obj in codes:
+        subject = f'Test Access Code: {test.name}'
+        message = f'''
+        Hello {code_obj.student_name},
+        
+        You have been assigned a test: {test.name}
+        Your access code is: {code_obj.code}
+        
+        Please visit the test platform and enter this code to start the test.
+        This code will expire in 24 hours.
+        
+        Duration: {test.duration}
+        Total Marks: {test.total_marks}
+        
+        Good luck!
+        '''
+        send_mail(
+            subject,
+            message,
+            settings.DEFAULT_FROM_EMAIL,
+            [code_obj.student_email],
+            fail_silently=False,
+        )
+    messages.success(request, 'Test codes have been sent to students.')
+    return redirect('list_tests')
+
+def enter_test_code(request):
+    if request.method == 'POST':
+        code = request.POST.get('code')
+        try:
+            test_code = TestCode.objects.get(
+                code=code,
+                is_used=False,
+                expires_at__gt=timezone.now()
+            )
+            
+            # Create test attempt
+            attempt = TestAttempt.objects.create(
+                test=test_code.test,
+                student_name=test_code.student_name,
+                student_email=test_code.student_email
+            )
+            
+            # Mark code as used
+            test_code.is_used = True
+            test_code.save()
+            
+            # Store attempt ID in session
+            request.session['attempt_id'] = attempt.id
+            request.session['student_name'] = attempt.student_name
+            
+            return redirect('take_test', attempt_id=attempt.id)
+        except TestCode.DoesNotExist:
+            messages.error(request, 'Invalid or expired code.')
+    
+    return render(request, 'enter_test_code.html')
+
+def take_test(request, attempt_id):
+    # Get attempt from session
+    session_attempt_id = request.session.get('attempt_id')
+    if not session_attempt_id or str(session_attempt_id) != str(attempt_id):
+        messages.error(request, 'Invalid test session.')
+        return redirect('enter_test_code')
+    
+    attempt = get_object_or_404(TestAttempt, id=attempt_id)
+    
+    if attempt.is_submitted:
+        messages.error(request, 'You have already submitted this test.')
+        return redirect('enter_test_code')
+    
+    if attempt.is_time_up():
+        # Auto-submit the test
+        attempt.end_time = timezone.now()
+        attempt.is_submitted = True
+        attempt.save()
+        messages.error(request, 'Time is up! Your test has been auto-submitted.')
+        return redirect('enter_test_code')
+    
+    if request.method == 'POST':
+        # Save answers for each question
+        for question in attempt.test.questions.all():
+            choice_id = request.POST.get(f'q{question.id}')
+            choice = None
+            if choice_id:
+                try:
+                    choice = Choice.objects.get(id=choice_id)
+                except Choice.DoesNotExist:
+                    choice = None
+            Answer.objects.create(
+                attempt=attempt,
+                question=question,
+                choice=choice
+            )
+        attempt.end_time = timezone.now()
+        attempt.is_submitted = True
+        # Calculate score here if needed
+        attempt.save()
+        # Clear session
+        request.session.pop('attempt_id', None)
+        request.session.pop('student_name', None)
+        messages.success(request, 'Test submitted successfully!')
+        return redirect('enter_test_code')
+    
+    context = {
+        'attempt': attempt,
+        'test': attempt.test,
+        'questions': attempt.test.questions.all(),
+        'remaining_time': attempt.test.duration - (timezone.now() - attempt.start_time),
+        'student_name': request.session.get('student_name')
+    }
+    return render(request, 'take_test.html', context)
+
+def reports(request):
+    # Only allow staff/faculty
+    if not request.user.is_staff:
+        return redirect('index')
+    
+    attempts = TestAttempt.objects.filter(is_submitted=True).order_by('-end_time')
+    context = {
+        'attempts': attempts,
+    }
+    return render(request, 'reports.html', context)
+
+def view_attempt(request, attempt_id):
+    if not request.user.is_staff:
+        return redirect('index')
+    attempt = get_object_or_404(TestAttempt, id=attempt_id)
+    answers = attempt.answers.select_related('question', 'choice').all()
+    context = {
+        'attempt': attempt,
+        'answers': answers,
+    }
+    return render(request, 'view_attempt.html', context)

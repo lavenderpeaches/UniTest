@@ -1,4 +1,6 @@
 from django.db import models
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 class Batch(models.Model):
     batch_name    = models.CharField(max_length=255)
@@ -46,3 +48,53 @@ class Choice(models.Model):
 
     def __str__(self):
         return f"{self.question} | {self.text}"
+
+class TestCode(models.Model):
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='access_codes')
+    student_name = models.CharField(max_length=100, null=True, blank=True)
+    student_email = models.EmailField(null=True, blank=True)
+    code = models.CharField(max_length=10, unique=True)
+    is_used = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    expires_at = models.DateTimeField()
+
+    def __str__(self):
+        return f"{self.code} - {self.student_name}"
+
+    @classmethod
+    def generate_code(cls):
+        """Generate a unique 6-character code"""
+        import random
+        import string
+        while True:
+            code = ''.join(random.choices(string.ascii_uppercase + string.digits, k=6))
+            if not cls.objects.filter(code=code).exists():
+                return code
+
+class TestAttempt(models.Model):
+    test = models.ForeignKey(Test, on_delete=models.CASCADE, related_name='attempts')
+    student_name = models.CharField(max_length=100, null=True, blank=True)
+    student_email = models.EmailField(null=True, blank=True)
+    start_time = models.DateTimeField(auto_now_add=True)
+    end_time = models.DateTimeField(null=True, blank=True)
+    is_submitted = models.BooleanField(default=False)
+    score = models.IntegerField(null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.student_name} - {self.test.name}"
+
+    def is_time_up(self):
+        """Check if the test duration has expired"""
+        if not self.end_time:
+            duration = self.test.duration
+            time_elapsed = timezone.now() - self.start_time
+            return time_elapsed >= duration
+        return True
+
+class Answer(models.Model):
+    attempt = models.ForeignKey(TestAttempt, on_delete=models.CASCADE, related_name='answers')
+    question = models.ForeignKey(Question, on_delete=models.CASCADE)
+    choice = models.ForeignKey(Choice, on_delete=models.SET_NULL, null=True, blank=True)
+
+    def __str__(self):
+        return f"{self.attempt} | {self.question} | {self.choice if self.choice else 'No Answer'}"

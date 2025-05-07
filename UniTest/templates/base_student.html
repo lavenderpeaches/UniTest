@@ -1,0 +1,94 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <title>UniTest</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/index1.css' %}" />
+        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet" />
+        <style>
+            body {
+                background: #f3f4f6;
+                min-height: 100vh;
+                margin: 0;
+                font-family: 'Poppins', Arial, sans-serif;
+            }
+            .student-main {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                min-height: 100vh;
+            }
+            .student-card {
+                background: #fff;
+                border-radius: 12px;
+                box-shadow: 0 2px 16px rgba(0, 0, 0, 0.08);
+                padding: 40px 32px;
+                min-width: 350px;
+                max-width: 420px;
+                width: 100%;
+                margin: 32px 0;
+            }
+            .student-card h2,
+            .student-card h1 {
+                font-family: 'Poppins', Arial, sans-serif;
+                font-weight: 600;
+                color: #2563eb;
+                margin-bottom: 18px;
+                text-align: center;
+            }
+            .student-card label {
+                font-weight: 500;
+                color: #222;
+            }
+            .student-card input,
+            .student-card textarea {
+                width: 100%;
+                padding: 10px;
+                border: 1px solid #e5e7eb;
+                border-radius: 6px;
+                margin-bottom: 12px;
+                font-size: 1rem;
+                font-family: 'Poppins', Arial, sans-serif;
+            }
+            .student-card button,
+            .student-card .button.primary {
+                width: 100%;
+                background: #2563eb;
+                color: #fff;
+                border: none;
+                border-radius: 6px;
+                padding: 12px 0;
+                font-size: 1.1rem;
+                font-weight: 600;
+                font-family: 'Poppins', Arial, sans-serif;
+                margin-top: 10px;
+                cursor: pointer;
+                transition: background 0.2s;
+            }
+            .student-card button:hover,
+            .student-card .button.primary:hover {
+                background: #1e40af;
+            }
+            .student-card .messages {
+                margin-bottom: 16px;
+            }
+            .student-card .alert {
+                background: #fee2e2;
+                color: #991b1b;
+                border-radius: 4px;
+                padding: 8px 12px;
+                margin-bottom: 8px;
+            }
+            .student-card .form-text {
+                color: #6b7280;
+                font-size: 0.95rem;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="student-main">{% block content %}{% endblock %}</div>
+    </body>
+</html>

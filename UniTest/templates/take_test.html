@@ -1,0 +1,103 @@
+{% extends 'base_student.html' %} {% block content %}
+<style>
+    .student-card {
+        margin-top: 48px !important;
+    }
+    .questions-container {
+        margin-top: 24px;
+    }
+    .options {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    .option {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        padding: 4px 0;
+    }
+    .option input[type='radio'] {
+        margin: 0 8px 0 0;
+        width: 18px;
+        height: 18px;
+    }
+    .option label {
+        margin: 0;
+        font-size: 1rem;
+        color: #222;
+        cursor: pointer;
+    }
+</style>
+<div class="student-card">
+    <h1>{{ test.name }}</h1>
+    <div class="student-info">
+        <p><strong>Student:</strong> {{ student_name }}</p>
+    </div>
+    <div class="test-info">
+        <p><strong>Duration:</strong> {{ test.duration }}</p>
+        <p><strong>Total Marks:</strong> {{ test.total_marks }}</p>
+    </div>
+    <div class="timer" id="timer">Time Remaining: <span id="time-remaining"></span></div>
+    <form method="post" id="test-form">
+        {% csrf_token %}
+        <div class="questions-container">
+            {% for question in questions %}
+            <div class="question-card">
+                <h3>Question {{ forloop.counter }}</h3>
+                <p class="question-text">{{ question.text }}</p>
+                <div class="options">
+                    {% for choice in question.choices.all %}
+                    <div class="option">
+                        <input type="radio" id="q{{ question.id }}_{{ forloop.counter }}" name="q{{ question.id }}" value="{{ choice.id }}" required />
+                        <label for="q{{ question.id }}_{{ forloop.counter }}"> {{ choice.text }} </label>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="button primary">Submit Test</button>
+        </div>
+    </form>
+</div>
+
+{% block extra_js %}
+<script>
+    // Timer functionality
+    function updateTimer() {
+        const endTime = new Date('{{ attempt.start_time|date:"c" }}').getTime() +
+                       {{ test.duration.total_seconds }} * 1000;
+
+        function update() {
+            const now = new Date().getTime();
+            const distance = endTime - now;
+
+            if (distance < 0) {
+                document.getElementById('test-form').submit();
+                return;
+            }
+
+            const hours = Math.floor(distance / (1000 * 60 * 60));
+            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+            document.getElementById('time-remaining').innerHTML =
+                `${hours.toString().padStart(2, '0')}:${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+        }
+
+        update();
+        setInterval(update, 1000);
+    }
+
+    // Prevent accidental navigation
+    window.onbeforeunload = function() {
+        return "Are you sure you want to leave? Your progress will be lost.";
+    };
+
+    // Initialize timer when page loads
+    document.addEventListener('DOMContentLoaded', updateTimer);
+</script>
+{% endblock %} {% endblock %}

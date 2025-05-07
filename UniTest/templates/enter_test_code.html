@@ -1,0 +1,23 @@
+{% extends 'base_student.html' %} {% block content %}
+<div class="student-card">
+    <h2>Enter Test Code</h2>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form method="post" class="test-code-form">
+        {% csrf_token %}
+        <div class="form-group">
+            <label for="code">Enter your test code:</label>
+            <input type="text" id="code" name="code" required pattern="[A-Z0-9]{6}" maxlength="6" placeholder="Enter 6-character code" class="form-control" />
+            <small class="form-text text-muted"> Enter the 6-character code you received via email </small>
+        </div>
+        <button type="submit" class="button primary">Start Test</button>
+    </form>
+</div>
+{% endblock %}

@@ -19,4 +19,9 @@ urlpatterns = [
     path('update-batch/<int:batch_id>/',   views.update_batch,                  name = 'update_batch'),
     path('tests/',                         views.list_tests,                    name = 'list_tests'),
     path('tests/delete/<int:test_id>/',    views.delete_test,                   name = 'delete_test'),
+    path('test/<int:test_id>/generate-codes/', views.generate_test_codes, name='generate_test_codes'),
+    path('enter-test-code/', views.enter_test_code, name='enter_test_code'),
+    path('take-test/<int:attempt_id>/', views.take_test, name='take_test'),
+    path('reports/', views.reports, name='reports'),
+    path('attempt/<int:attempt_id>/', views.view_attempt, name='view_attempt'),
 ]

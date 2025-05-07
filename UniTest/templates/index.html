@@ -1,60 +1,86 @@
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>UniTest</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/index1.css' %}">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
-</head>
-<body>
-    {% if page != 'register' %}
-    <div class="container1">
-        <h1>UniTest</h1>
-        <div class="loginForm">
-            <h3>Login to Your Account</h3>
-    
-            <form action="{% url 'login' %}" method="POST">
-                {% csrf_token %}
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Enter your username" name="username" required autocomplete="username">
-
-                <label for="password" id="pw">Password</label>
-                <input type="password" id="password" placeholder="Enter your password" name="password" required autocomplete="current-password">
-
-                <button type="submit" id="loginButton">Login</button>
-            </form>
-            <a href="{% url 'register' %}">Don't have an account? Register</a>
+    <head>
+        <meta charset="UTF-8" />
+        <title>UniTest</title>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <link rel="stylesheet" type="text/css" href="{% static 'css/index1.css' %}" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+        <link
+            href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+            rel="stylesheet"
+        />
+        <style>
+            .roleSelect {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                margin-top: 40px;
+            }
+            .roleSelect h3 {
+                font-family: 'Poppins', serif;
+                font-weight: 600;
+                font-size: 1.2rem;
+                margin-bottom: 30px;
+            }
+            .role-btn {
+                display: block;
+                width: 220px;
+                margin: 10px 0;
+                padding: 14px 0;
+                font-family: 'Poppins', serif;
+                font-size: 1.1rem;
+                font-weight: 500;
+                border: none;
+                border-radius: 6px;
+                background-color: #2563eb;
+                color: #fff;
+                text-align: center;
+                text-decoration: none;
+                transition: background 0.2s, box-shadow 0.2s;
+                box-shadow: 0 2px 8px rgba(37, 99, 235, 0.08);
+            }
+            .role-btn:hover {
+                background-color: #1e40af;
+                box-shadow: 0 4px 16px rgba(37, 99, 235, 0.15);
+            }
+        </style>
+    </head>
+    <body>
+        {% if page != 'register' %}
+        <div class="container1">
+            <h1>UniTest</h1>
+            <div class="roleSelect">
+                <h3>Continue as:</h3>
+                <a href="{% url 'enter_test_code' %}" class="role-btn student-btn">Student</a>
+                <a href="{% url 'login' %}" class="role-btn faculty-btn">Faculty</a>
+            </div>
         </div>
-    </div>    
-    {% else %}
-    <div class = "container2">
-        <h1>UniTest</h1>
-        <div class="registerForm">
-            <h3>Create an account</h3>
-            <form action="{% url 'register' %}" method="POST">
-                {% csrf_token %}
-                <label for="email">Email</label>
-                <input type="email" id="email" placeholder="Enter Email" name="email" required autocomplete="email">
+        {% else %}
+        <div class="container2">
+            <h1>UniTest</h1>
+            <div class="registerForm">
+                <h3>Create an account</h3>
+                <form action="{% url 'register' %}" method="POST">
+                    {% csrf_token %}
+                    <label for="email">Email</label>
+                    <input type="email" id="email" placeholder="Enter Email" name="email" required autocomplete="email" />
 
-                <label for="username">Username</label>
-                <input type="text" id="username" placeholder="Enter Username" name="username" required autocomplete="username">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" placeholder="Enter Username" name="username" required autocomplete="username" />
 
-                <label for="password">Password</label>
-                <input type="password" id="password" placeholder="Enter Password" name="password" required autocomplete="new-password">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" placeholder="Enter Password" name="password" required autocomplete="new-password" />
 
-                <label for="password2">Repeat Password</label>
-                <input type="password" id="password2" placeholder="Repeat Password" name="password2" required autocomplete="new-password">
-                <button type="submit" id="registerButton">Register</button>
-
-            </form>
-            <a href="{% url 'login' %}">Already have an account? Login</a>
+                    <label for="password2">Repeat Password</label>
+                    <input type="password" id="password2" placeholder="Repeat Password" name="password2" required autocomplete="new-password" />
+                    <button type="submit" id="registerButton">Register</button>
+                </form>
+                <a href="{% url 'login' %}">Already have an account? Login</a>
+            </div>
         </div>
-    </div>
-    {% endif %}
-
-</body>
+        {% endif %}
+    </body>
 </html>
