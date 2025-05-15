@@ -213,7 +213,6 @@ textarea {
 
 .question-header {
     display: flex;
-    justify-content: space-between;
     align-items: center;
     margin-bottom: 1rem;
 }
@@ -302,4 +301,20 @@ textarea {
     border: 1px solid transparent;
     background-color: var(--primary);
     color: white;
+}
+
+.headerForQuestions{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 50px;
+    width: 750px;
+    padding: 0 20px;
+}
+
+.headerForQuestions p{
+    font-size: 15px;
+    font-family: "Poppins", serif;
+    color:black;
+    font-weight: 600;
 }

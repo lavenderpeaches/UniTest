@@ -13,6 +13,7 @@ from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 from django.views.decorators.http import require_POST
+from django.http import HttpResponseForbidden
 
 # Create your views here.
 
@@ -236,6 +237,46 @@ def delete_test(request, test_id):
         return redirect('list_tests')
     
     return render(request, 'list_tests.html')
+
+@login_required
+def update_test(request, test_id):
+    test = get_object_or_404(Test, id=test_id)
+    questions = test.questions.all()
+    
+    if request.method == 'POST':
+        print("Request body: ",request.body)
+        print("UTG|F-8 ",request.body.decode('utf-8'))
+        print(request.headers.get('Content-Type'))
+        print(request.META["Content-Type"])
+        form = testForm(request.POST, instance=test)
+        print("Form Data:", request.POST)
+        print("Form Errors:", form.errors)
+
+        if form.is_valid():
+            form.save()
+
+            # Update questions and choices
+            for question in questions:
+                question_text = request.POST.get(f"question_{question.id}")
+                question_marks = request.POST.get(f"question_marks_{question.id}")
+                question.text = question_text
+                question.marks = question_marks
+                question.save()
+
+                for choice in question.choices.all():
+                    choice_text = request.POST.get(f"choice_{question.id}_{choice.id}")
+                    is_correct = request.POST.get(f"is_correct_{question.id}_{choice.id}") is not None
+                    choice.text = choice_text
+                    choice.is_correct = is_correct
+                    choice.save()
+
+            return redirect('list_tests')
+    else:
+        form = testForm(instance=test)
+
+    return render(request, 'update_test.html', {'form': form, 'test': test, 'questions': questions})
+
+
 
 @require_POST
 def generate_test_codes(request, test_id):

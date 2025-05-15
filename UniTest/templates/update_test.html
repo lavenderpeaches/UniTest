@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="updateCont">
+    <div class="container">
+        <div class="card">
+            <div class="card-content">
+
+                <h2>Test Details</h2>
+
+                <div class="form-grid">
+                    <form method="post" action="{% url 'update_test' test.id %}">
+                        {% csrf_token %}
+                    <p>
+                        <label for="id_name">Name:</label>
+                        <input type="text" name="name" id="id_name" value="{{ form.name.value|default:form.instance.name }}">
+                    </p>
+
+                    <p>
+                        <label for="id_course">Course:</label>
+                        <select name="course" id="id_course">
+                            <option value="">---------</option>
+                            {% for course in form.fields.course.queryset %}
+                                <option value="{{ course.id }}"
+                                        {% if form.is_bound and form.data.course == course.id|stringformat:"s" %}
+                                            selected
+                                        {% elif not form.is_bound and form.initial.course.id == course.id %}
+                                            selected
+                                        {% endif %}>
+                                    {{ course }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </p>
+
+                    <p>
+                        <label for="id_batch">Batch:</label>
+                        <select name="batch" id="id_batch">
+                            <option value="">---------</option>
+                            {% for batch in form.fields.batch.queryset %}
+                                <option value="{{ batch.id }}"
+                                        {% if form.is_bound and form.data.batch == batch.id|stringformat:"s" %}
+                                            selected
+                                        {% elif not form.is_bound and form.initial.batch.id == batch.id %}
+                                            selected
+                                        {% endif %}>
+                                    {{ batch }}
+                                </option>
+                            {% endfor %}
+                        </select>
+                    </p>
+
+                    <p>
+                        <label for="id_total_marks">Total Marks:</label>
+                        <input type="number" name="total_marks" id="id_total_marks" value="{{ form.total_marks.value|default:form.instance.total_marks }}">
+                    </p>
+
+                    <p>
+                        <label for="id_total_questions">Total Questions:</label>
+                        <input type="number" name="total_questions" id="id_total_questions" value="{{ form.total_questions.value|default:form.instance.total_questions }}">
+                    </p>
+
+                    <p>
+                        <label for="id_duration">Duration:</label>
+                        <input type="text" name="duration" id="id_duration" value="{{ form.duration.value|default:form.instance.duration }}">
+                        <span class="helptext">Test duration (hh:mm:ss)</span>
+                    </p>
+
+                        <!-- Questions and Choices -->
+                        {% for question in questions %}
+                            <div class="card mt-4">
+                                <div class="card-content">
+                                    <h3>Question {{ forloop.counter }}</h3>
+                                    <div class="form-item">
+                                        <label for="question_{{ question.id }}">Text:</label>
+                                        <input type="text" name="question_{{ question.id }}" value="{{ question.text }}">
+                                    </div>
+                                    <div class="form-item">
+                                        <label for="question_marks_{{ question.id }}">Marks:</label>
+                                        <input type="number" name="question_marks_{{ question.id }}" value="{{ question.marks }}">
+                                    </div>
+
+                                    <div class="choices-section mt-2">
+                                        <h4>Choices:</h4>
+                                        {% for choice in question.choices.all %}
+                                            <div class="choice-item flex items-center space-x-2">
+                                                <input type="text" name="choice_{{ question.id }}_{{ choice.id }}" value="{{ choice.text }}">
+                                                <label>
+                                                    <input type="checkbox" name="is_correct_{{ question.id }}_{{ choice.id }}" {% if choice.is_correct %}checked{% endif %}>
+                                                    Correct
+                                                </label>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                        <div class="mt-4">
+                            <button type="submit" class="create-button">Update Test</button>
+                        </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
