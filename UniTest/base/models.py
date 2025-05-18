@@ -11,6 +11,16 @@ class Batch(models.Model):
     def __str__(self):
         return f"{self.batch_name} | {self.batch_session} | {self.semester}th sem | {self.batch_section}"
 
+class Student(models.Model):
+    batch = models.ForeignKey(Batch, on_delete=models.CASCADE, related_name='students')
+    name = models.CharField(max_length=255)
+    email = models.EmailField(unique=True)
+    roll_number = models.CharField(max_length=20, unique=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"{self.name} ({self.roll_number})"
+
 class Course(models.Model):
     course_name = models.CharField(max_length=255, unique=True)
     course_code = models.CharField(max_length=255, unique=True)

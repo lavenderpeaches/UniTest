@@ -1,48 +1,150 @@
-{% extends 'base.html' %}
-{% block content %}
-<div class="batch-container">
-    <p class="batch-title">Batches</p>
-    
-    <div class="batch-content">
-        <div class="batch-list">
-            <p class="batch-list-title">Batch List</p>
-            {% for batch in batches %}
-                <div class="batch">
-                    <p class="batch-name">{{ forloop.counter }}. Name:{{ batch.batch_name }}</p>
-                    <p class="batch-session">Session: {{ batch.batch_session }}</p>
-                    <p class="batch-semester">Semester: {{ batch.semester }}th</p>
-                    <p class="batch-section">Section: {{ batch.batch_section }}</p>
-                    <div class = "batch-buttons">
-                        <form action ="{% url 'update_batch' batch.id %}" method="POST" style="display:inline;">
-                            {% csrf_token %}
-                            <button class = "edit-batch-button" type="submit">Edit Batch</button>
-                        </form>
+{% extends 'base.html' %} {% block content %}
 
-                        <form action="{% url 'delete_batch' batch.id %}" method="POST" style="display:inline;">
-                            {% csrf_token %}
-                            <button type="submit" class="delete-batch-button">Delete Batch</button>
-                        </form>
-                    </div>
-                </div>
-                {% empty %}
-                <p>No batches available.</p>
-            {% endfor %}
-        </div>
+<div class="container">
+    <h1>Batches</h1>
 
-        <div class="add-batch">
-            <p class="add-batch-title">Add Batch</p>
-            <form action="{% url 'batches' %}" method="post">
-                {% csrf_token %}
-                {% for field in form %}
-                    <div class="batch-form-group">
-                        {{ field.label_tag }}
-                        {{ field }}
-                    </div>
-                {% endfor %}
-                <button class="add-batch-button">Add Batch</button>
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="card">
+        <header class="card-header">
+            <h2>Add New Batch</h2>
+        </header>
+        <div class="card-content">
+            <form method="POST">
+                {% csrf_token %} {{ form.as_p }}
+                <button type="submit" class="button">Add Batch</button>
             </form>
         </div>
     </div>
+
+    <div class="card mt-4">
+        <header class="card-header">
+            <h2>All Batches</h2>
+        </header>
+        <div class="card-content">
+            {% if batches %}
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Batch Name</th>
+                            <th>Section</th>
+                            <th>Session</th>
+                            <th>Semester</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for batch in batches %}
+                        <tr>
+                            <td>{{ batch.batch_name }}</td>
+                            <td>{{ batch.batch_section }}</td>
+                            <td>{{ batch.batch_session }}</td>
+                            <td>{{ batch.semester }}</td>
+                            <td>
+                                <a href="{% url 'view_batch_students' batch.id %}" class="button ghost"> <i class="fas fa-users"></i> Students </a>
+                                <a href="{% url 'update_batch' batch.id %}" class="button ghost"> <i class="fas fa-edit"></i> Edit </a>
+                                <button class="button ghost delete-batch" data-batch-id="{{ batch.id }}"><i class="fas fa-trash"></i> Delete</button>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+            {% else %}
+            <p>No batches have been added yet.</p>
+            {% endif %}
+        </div>
+    </div>
 </div>
+
+<style>
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 1rem;
+    }
+
+    .card-header {
+        padding: 1rem;
+        border-bottom: 1px solid #eee;
+    }
+
+    .card-content {
+        padding: 1rem;
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    .table th,
+    .table td {
+        padding: 0.75rem;
+        text-align: left;
+        border-bottom: 1px solid #eee;
+    }
+
+    .table th {
+        font-weight: 600;
+        background-color: #f8f9fa;
+    }
+
+    .button.ghost {
+        padding: 0.25rem 0.5rem;
+        margin-right: 0.5rem;
+    }
+
+    .button.ghost.delete-batch {
+        color: #dc3545;
+    }
+
+    .button.ghost.delete-batch:hover {
+        background-color: #dc3545;
+        color: white;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+</style>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const deleteButtons = document.querySelectorAll('.delete-batch');
+
+        deleteButtons.forEach((button) => {
+            button.addEventListener('click', function () {
+                if (confirm('Are you sure you want to delete this batch?')) {
+                    const batchId = this.dataset.batchId;
+                    const form = document.createElement('form');
+                    form.method = 'POST';
+                    form.action = `/batches/delete/${batchId}/`;
+
+                    const csrfInput = document.createElement('input');
+                    csrfInput.type = 'hidden';
+                    csrfInput.name = 'csrfmiddlewaretoken';
+                    csrfInput.value = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+                    form.appendChild(csrfInput);
+                    document.body.appendChild(form);
+                    form.submit();
+                }
+            });
+        });
+    });
+</script>
 
 {% endblock %}

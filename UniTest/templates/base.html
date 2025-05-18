@@ -16,6 +16,112 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible+Next:ital,wght@0,200..800;1,200..800&family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+    <style>
+        html, body {
+            background: #f7f8fa;
+            color: #23272f;
+            font-family: 'Inter', 'Poppins', 'Atkinson Hyperlegible Next', Arial, sans-serif;
+            font-size: 16px;
+            min-height: 100vh;
+        }
+        .card, .import-card, .instructions-card {
+            background: #fff;
+            border-radius: 14px;
+            box-shadow: 0 4px 24px 0 rgba(0,0,0,0.07);
+            border: 1px solid #e6e8ef;
+        }
+        .card-header {
+            background: transparent;
+            border-bottom: 1px solid #e6e8ef;
+            color: #3a4a6b;
+        }
+        .card-header h2 {
+            color: #3a4a6b;
+        }
+        .card-content {
+            color: #23272f;
+        }
+        .table {
+            background: #fff;
+            border-radius: 8px;
+            border: 1px solid #e6e8ef;
+            box-shadow: 0 2px 8px 0 rgba(0,0,0,0.04);
+        }
+        .table th, .table td {
+            color: #23272f;
+            border-bottom: 1px solid #e6e8ef;
+        }
+        .table th {
+            background: #f3f6fa;
+        }
+        .form-item label {
+            color: #3a4a6b;
+        }
+        .form-item input, .form-item textarea, .form-item select {
+            background: #f7f8fa;
+            color: #23272f;
+            border: 1px solid #e6e8ef;
+            border-radius: 6px;
+            padding: 0.5rem;
+        }
+        .form-item input[type="file"] {
+            background: #fff;
+        }
+        .button, .import-btn {
+            background: linear-gradient(90deg, #4e8cff 0%, #7da6ff 100%);
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            box-shadow: 0 2px 8px 0 rgba(125,166,255,0.10);
+            transition: background 0.2s;
+        }
+        .button:hover, .import-btn:hover {
+            background: linear-gradient(90deg, #7da6ff 0%, #4e8cff 100%);
+        }
+        .alert {
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 0.5rem;
+            padding: 1rem;
+        }
+        .alert-success {
+            background: #e6fbe6;
+            color: #217a21;
+            border: 1px solid #b6eab6;
+        }
+        .alert-error {
+            background: #fdeaea;
+            color: #a12a2a;
+            border: 1px solid #f5bcbc;
+        }
+        .csv-preview {
+            background: #f3f6fa;
+            border: 1px solid #e6e8ef;
+            color: #23272f;
+        }
+        .side-nav, .top-nav {
+            background: #fff;
+            border-right: 1px solid #e6e8ef;
+        }
+        .side-nav-link, .nav-link {
+            color: #3a4a6b;
+        }
+        .side-nav-link.active, .nav-link.active {
+            color: #4e8cff;
+            font-weight: 600;
+        }
+        .side-nav-link:hover, .nav-link:hover {
+            color: #7da6ff;
+        }
+        .empty-state {
+            color: #888;
+        }
+        @media (max-width: 600px) {
+            html, body { font-size: 15px; }
+            .card, .import-card, .instructions-card { border-radius: 8px; }
+        }
+    </style>
 </head>
 
 <body>

@@ -1,109 +1,342 @@
 {% extends 'base.html' %}
-
 {% block content %}
-<div class="updateCont">
-    <div class="container">
-        <div class="card">
+
+<div class="container">
+    <a href="{% url 'list_tests' %}">
+        <button id="backButton" class="button button-outline mb-5">
+            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2">
+                <path d="M19 12H5M12 19l-7-7 7-7"></path>
+            </svg>
+            Back to Tests
+        </button>
+    </a>
+    <h1>Update Test</h1>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <form id="updateTestForm" method="POST" class="form">
+        {% csrf_token %}
+        <div id="updateTestCard" class="card">
+            <header class="card-header">
+                <h2>Edit Test Details</h2>
+            </header>
             <div class="card-content">
+                <label for="name">Test Name:</label>
+                <input type="text" id="name" name="name" value="{{ form.instance.name }}" required>
+            
+                <label for="course">Course:</label>
+                <select id="course" name="course" required>
+                    {% for course in form.fields.course.queryset %}
+                        <option value="{{ course.id }}" {% if course.id == form.instance.course.id %}selected{% endif %}>
+                            {{ course.course_name }}
+                        </option>
+                    {% endfor %}
+                </select>
+            
+                <label for="batch">Batch:</label>
+                <select id="batch" name="batch" required>
+                    {% for batch in form.fields.batch.queryset %}
+                        <option value="{{ batch.id }}" {% if batch.id == form.instance.batch.id %}selected{% endif %}>
+                            {{ batch.batch_name }}
+                        </option>
+                    {% endfor %}
+                </select>
 
-                <h2>Test Details</h2>
-
-                <div class="form-grid">
-                    <form method="post" action="{% url 'update_test' test.id %}">
-                        {% csrf_token %}
-                    <p>
-                        <label for="id_name">Name:</label>
-                        <input type="text" name="name" id="id_name" value="{{ form.name.value|default:form.instance.name }}">
-                    </p>
-
-                    <p>
-                        <label for="id_course">Course:</label>
-                        <select name="course" id="id_course">
-                            <option value="">---------</option>
-                            {% for course in form.fields.course.queryset %}
-                                <option value="{{ course.id }}"
-                                        {% if form.is_bound and form.data.course == course.id|stringformat:"s" %}
-                                            selected
-                                        {% elif not form.is_bound and form.initial.course.id == course.id %}
-                                            selected
-                                        {% endif %}>
-                                    {{ course }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </p>
-
-                    <p>
-                        <label for="id_batch">Batch:</label>
-                        <select name="batch" id="id_batch">
-                            <option value="">---------</option>
-                            {% for batch in form.fields.batch.queryset %}
-                                <option value="{{ batch.id }}"
-                                        {% if form.is_bound and form.data.batch == batch.id|stringformat:"s" %}
-                                            selected
-                                        {% elif not form.is_bound and form.initial.batch.id == batch.id %}
-                                            selected
-                                        {% endif %}>
-                                    {{ batch }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                    </p>
-
-                    <p>
-                        <label for="id_total_marks">Total Marks:</label>
-                        <input type="number" name="total_marks" id="id_total_marks" value="{{ form.total_marks.value|default:form.instance.total_marks }}">
-                    </p>
-
-                    <p>
-                        <label for="id_total_questions">Total Questions:</label>
-                        <input type="number" name="total_questions" id="id_total_questions" value="{{ form.total_questions.value|default:form.instance.total_questions }}">
-                    </p>
-
-                    <p>
-                        <label for="id_duration">Duration:</label>
-                        <input type="text" name="duration" id="id_duration" value="{{ form.duration.value|default:form.instance.duration }}">
-                        <span class="helptext">Test duration (hh:mm:ss)</span>
-                    </p>
-
-                        <!-- Questions and Choices -->
-                        {% for question in questions %}
-                            <div class="card mt-4">
-                                <div class="card-content">
-                                    <h3>Question {{ forloop.counter }}</h3>
-                                    <div class="form-item">
-                                        <label for="question_{{ question.id }}">Text:</label>
-                                        <input type="text" name="question_{{ question.id }}" value="{{ question.text }}">
-                                    </div>
-                                    <div class="form-item">
-                                        <label for="question_marks_{{ question.id }}">Marks:</label>
-                                        <input type="number" name="question_marks_{{ question.id }}" value="{{ question.marks }}">
-                                    </div>
-
-                                    <div class="choices-section mt-2">
-                                        <h4>Choices:</h4>
-                                        {% for choice in question.choices.all %}
-                                            <div class="choice-item flex items-center space-x-2">
-                                                <input type="text" name="choice_{{ question.id }}_{{ choice.id }}" value="{{ choice.text }}">
-                                                <label>
-                                                    <input type="checkbox" name="is_correct_{{ question.id }}_{{ choice.id }}" {% if choice.is_correct %}checked{% endif %}>
-                                                    Correct
-                                                </label>
-                                            </div>
-                                        {% endfor %}
-                                    </div>
-                                </div>
-                            </div>
-                        {% endfor %}
-
-                        <div class="mt-4">
-                            <button type="submit" class="create-button">Update Test</button>
-                        </div>
-                    </form>
-                </div>
-
+                <label for="total_marks">Total Marks:</label>
+                <input type="number" id="total_marks" name="total_marks" value="{{ form.instance.total_marks }}" required>
+            
+                <label for="total_questions">Total Questions:</label>
+                <input type="number" id="total_questions" name="total_questions" value="{{ form.instance.total_questions }}" required>
+            
+                <label for="duration">Duration (minutes):</label>
+                <input type="number" id="duration" name="duration" value="{{ duration_minutes }}" required>
             </div>
         </div>
-    </div>
+
+        <!-- Questions Section -->
+        <div class="card mt-4">
+            <header class="card-header">
+                <h2>Questions</h2>
+                <button type="button" class="button" id="addQuestionBtn">
+                    <i class="fas fa-plus"></i> Add Question
+                </button>
+            </header>
+            <div class="card-content">
+                <div id="questionsContainer">
+                    {% for question in test.questions.all %}
+                    <div class="question-card" data-question-id="{{ question.id }}">
+                        <div class="question-header">
+                            <h3>Question {{ forloop.counter }}</h3>
+                            <button type="button" class="button ghost delete-question" data-question-id="{{ question.id }}">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                        
+                        <div class="form-item">
+                            <label>Question Text</label>
+                            <textarea name="question_text_{{ question.id }}" required>{{ question.text }}</textarea>
+                        </div>
+
+                        <div class="form-item">
+                            <label>Marks</label>
+                            <input type="number" name="question_marks_{{ question.id }}" value="{{ question.marks }}" min="1" required />
+                        </div>
+
+                        <div class="form-item">
+                            <label>Number of Choices</label>
+                            <input type="number" name="num_choices_{{ question.id }}" value="{{ question.num_choices }}" min="2" max="6" required />
+                        </div>
+
+                        <div class="choices-container">
+                            <label>Choices</label>
+                            {% for choice in question.choices.all %}
+                            <div class="choice-item">
+                                <span class="choice-label">{{ forloop.counter|stringformat:"c"|upper }}.</span>
+                                <input type="text" name="choice_text_{{ question.id }}_{{ choice.id }}" value="{{ choice.text }}" required />
+                                <input type="checkbox" name="is_correct_{{ question.id }}_{{ choice.id }}" {% if choice.is_correct %}checked{% endif %} />
+                                <label>Correct</label>
+                                <button type="button" class="button ghost delete-choice" data-choice-id="{{ choice.id }}">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+                            {% endfor %}
+                            <button type="button" class="button ghost add-choice" data-question-id="{{ question.id }}">
+                                <i class="fas fa-plus"></i> Add Choice
+                            </button>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+
+        <div class="form-actions mt-4">
+            <button type="submit" id="updateButton" class="button">Update Test</button>
+        </div>
+    </form>
 </div>
-{% endblock %}
+
+<style>
+    .question-card {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 16px;
+        margin-bottom: 16px;
+    }
+
+    .question-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 16px;
+    }
+
+    .choices-container {
+        margin-top: 16px;
+    }
+
+    .choice-item {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 8px;
+    }
+
+    .choice-label {
+        font-weight: 500;
+        min-width: 24px;
+    }
+
+    .mt-4 {
+        margin-top: 1.5rem;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding: 16px;
+    }
+
+    .messages {
+        margin-bottom: 1rem;
+    }
+
+    .alert {
+        padding: 1rem;
+        border-radius: 4px;
+        margin-bottom: 0.5rem;
+    }
+
+    .alert-success {
+        background-color: #d4edda;
+        color: #155724;
+        border: 1px solid #c3e6cb;
+    }
+
+    .alert-error {
+        background-color: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Add Question Button
+    const addQuestionBtn = document.getElementById('addQuestionBtn');
+    const questionsContainer = document.getElementById('questionsContainer');
+    const totalQuestionsInput = document.getElementById('total_questions');
+    const totalMarksInput = document.getElementById('total_marks');
+
+    addQuestionBtn.addEventListener('click', function() {
+        const questionCount = document.querySelectorAll('.question-card').length;
+        const newQuestionId = Date.now(); // Temporary ID for new questions
+        
+        const questionHtml = `
+            <div class="question-card" data-question-id="${newQuestionId}">
+                <div class="question-header">
+                    <h3>Question ${questionCount + 1}</h3>
+                    <button type="button" class="button ghost delete-question" data-question-id="${newQuestionId}">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                </div>
+                
+                <div class="form-item">
+                    <label>Question Text</label>
+                    <textarea name="question_text_new_${newQuestionId}" required></textarea>
+                </div>
+
+                <div class="form-item">
+                    <label>Marks</label>
+                    <input type="number" name="question_marks_new_${newQuestionId}" value="1" min="1" required />
+                </div>
+
+                <div class="form-item">
+                    <label>Number of Choices</label>
+                    <input type="number" name="num_choices_new_${newQuestionId}" value="4" min="2" max="6" required />
+                </div>
+
+                <div class="choices-container">
+                    <label>Choices</label>
+                    <div class="choice-item">
+                        <span class="choice-label">A.</span>
+                        <input type="text" name="choice_text_new_${newQuestionId}_1" required />
+                        <input type="checkbox" name="is_correct_new_${newQuestionId}_1" />
+                        <label>Correct</label>
+                    </div>
+                    <div class="choice-item">
+                        <span class="choice-label">B.</span>
+                        <input type="text" name="choice_text_new_${newQuestionId}_2" required />
+                        <input type="checkbox" name="is_correct_new_${newQuestionId}_2" />
+                        <label>Correct</label>
+                    </div>
+                    <div class="choice-item">
+                        <span class="choice-label">C.</span>
+                        <input type="text" name="choice_text_new_${newQuestionId}_3" required />
+                        <input type="checkbox" name="is_correct_new_${newQuestionId}_3" />
+                        <label>Correct</label>
+                    </div>
+                    <div class="choice-item">
+                        <span class="choice-label">D.</span>
+                        <input type="text" name="choice_text_new_${newQuestionId}_4" required />
+                        <input type="checkbox" name="is_correct_new_${newQuestionId}_4" />
+                        <label>Correct</label>
+                    </div>
+                    <button type="button" class="button ghost add-choice" data-question-id="${newQuestionId}">
+                        <i class="fas fa-plus"></i> Add Choice
+                    </button>
+                </div>
+            </div>
+        `;
+        
+        questionsContainer.insertAdjacentHTML('beforeend', questionHtml);
+        totalQuestionsInput.value = questionCount + 1;
+        updateTotalMarks();
+    });
+
+    // Delete Question
+    questionsContainer.addEventListener('click', function(e) {
+        if (e.target.closest('.delete-question')) {
+            const questionCard = e.target.closest('.question-card');
+            questionCard.remove();
+            updateQuestionNumbers();
+            totalQuestionsInput.value = document.querySelectorAll('.question-card').length;
+            updateTotalMarks();
+        }
+    });
+
+    // Add Choice
+    questionsContainer.addEventListener('click', function(e) {
+        if (e.target.closest('.add-choice')) {
+            const addChoiceBtn = e.target.closest('.add-choice');
+            const questionId = addChoiceBtn.dataset.questionId;
+            const choicesContainer = addChoiceBtn.closest('.choices-container');
+            const choiceCount = choicesContainer.querySelectorAll('.choice-item').length;
+            const choiceLabel = String.fromCharCode(65 + choiceCount); // A, B, C, etc.
+
+            const choiceHtml = `
+                <div class="choice-item">
+                    <span class="choice-label">${choiceLabel}.</span>
+                    <input type="text" name="choice_text_${questionId}_${choiceCount + 1}" required />
+                    <input type="checkbox" name="is_correct_${questionId}_${choiceCount + 1}" />
+                    <label>Correct</label>
+                    <button type="button" class="button ghost delete-choice">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            `;
+            
+            addChoiceBtn.insertAdjacentHTML('beforebegin', choiceHtml);
+            updateChoiceLabels(choicesContainer);
+        }
+    });
+
+    // Delete Choice
+    questionsContainer.addEventListener('click', function(e) {
+        if (e.target.closest('.delete-choice')) {
+            const choiceItem = e.target.closest('.choice-item');
+            const choicesContainer = choiceItem.closest('.choices-container');
+            choiceItem.remove();
+            updateChoiceLabels(choicesContainer);
+        }
+    });
+
+    // Update question numbers
+    function updateQuestionNumbers() {
+        document.querySelectorAll('.question-card').forEach((card, index) => {
+            card.querySelector('h3').textContent = `Question ${index + 1}`;
+        });
+    }
+
+    // Update choice labels
+    function updateChoiceLabels(container) {
+        container.querySelectorAll('.choice-item').forEach((item, index) => {
+            item.querySelector('.choice-label').textContent = `${String.fromCharCode(65 + index)}.`;
+        });
+    }
+
+    // Update total marks
+    function updateTotalMarks() {
+        let total = 0;
+        document.querySelectorAll('input[name^="question_marks_"]').forEach(input => {
+            total += parseInt(input.value) || 0;
+        });
+        totalMarksInput.value = total;
+    }
+
+    // Listen for marks changes
+    questionsContainer.addEventListener('input', function(e) {
+        if (e.target.name.startsWith('question_marks_')) {
+            updateTotalMarks();
+        }
+    });
+});
+</script>
+
+{% endblock %} 

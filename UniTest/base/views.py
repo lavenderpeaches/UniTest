@@ -1,18 +1,20 @@
 from django.contrib.auth.models     import User
 from django.shortcuts               import render, redirect
-from django.http                    import HttpResponse
+from django.http                    import HttpResponse, JsonResponse
 from django.contrib.auth            import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib                 import messages
 from django.urls                    import reverse_lazy
-from .forms                         import testForm, batchForm, courseForm
-from .models                        import Test, Batch, Course,Question, Choice, TestCode, TestAttempt, Answer
+from .forms                         import testForm, batchForm, courseForm, StudentImportForm
+from .models                        import Test, Batch, Course,Question, Choice, TestCode, TestAttempt, Answer, Student
 from django.shortcuts               import get_object_or_404
 from django.core.mail import send_mail
 from django.conf import settings
 from django.utils import timezone
 from datetime import timedelta
 from django.views.decorators.http import require_POST
+import csv
+import io
 from django.http import HttpResponseForbidden
 
 # Create your views here.
@@ -156,6 +158,54 @@ def batches(request):
         'form': form,  
     }
     return render(request, 'batches.html', context)
+
+@login_required
+def import_students(request, batch_id):
+    batch = get_object_or_404(Batch, id=batch_id)
+    
+    if request.method == 'POST':
+        form = StudentImportForm(request.POST, request.FILES)
+        if form.is_valid():
+            csv_file = request.FILES['csv_file']
+            decoded_file = csv_file.read().decode('utf-8')
+            io_string = io.StringIO(decoded_file)
+            reader = csv.DictReader(io_string)
+            
+            success_count = 0
+            error_count = 0
+            
+            for row in reader:
+                try:
+                    Student.objects.create(
+                        batch=batch,
+                        name=row['Name'],
+                        email=row['Email'],
+                        roll_number=row['Roll Number']
+                    )
+                    success_count += 1
+                except Exception as e:
+                    error_count += 1
+                    messages.error(request, f"Error importing student {row.get('Name', 'Unknown')}: {str(e)}")
+            
+            messages.success(request, f"Successfully imported {success_count} students. Failed to import {error_count} students.")
+            return redirect('view_batch_students', batch_id=batch_id)
+    else:
+        form = StudentImportForm()
+    
+    return render(request, 'import_students.html', {
+        'form': form,
+        'batch': batch
+    })
+
+@login_required
+def view_batch_students(request, batch_id):
+    batch = get_object_or_404(Batch, id=batch_id)
+    students = batch.students.all().order_by('roll_number')
+    
+    return render(request, 'view_batch_students.html', {
+        'batch': batch,
+        'students': students
+    })
 
 def students(request):
     return render(request, 'students.html')
@@ -417,3 +467,105 @@ def view_attempt(request, attempt_id):
         'answers': answers,
     }
     return render(request, 'view_attempt.html', context)
+
+@login_required
+def update_test(request, test_id):
+    test = get_object_or_404(Test, id=test_id)
+    
+    if request.method == 'POST':
+        # Convert duration from minutes to timedelta
+        duration_minutes = request.POST.get('duration')
+        if duration_minutes:
+            request.POST = request.POST.copy()
+            request.POST['duration'] = timedelta(minutes=int(duration_minutes))
+        
+        form = testForm(request.POST, instance=test)
+        if form.is_valid():
+            test = form.save()
+            
+            # Update existing questions
+            for question in test.questions.all():
+                question_id = str(question.id)
+                question_text = request.POST.get(f'question_text_{question_id}')
+                question_marks = request.POST.get(f'question_marks_{question_id}')
+                num_choices = request.POST.get(f'num_choices_{question_id}')
+                
+                if question_text:
+                    question.text = question_text
+                    question.marks = int(question_marks) if question_marks else 1
+                    question.num_choices = int(num_choices) if num_choices else 4
+                    question.save()
+                    
+                    # Update choices
+                    for choice in question.choices.all():
+                        choice_id = str(choice.id)
+                        choice_text = request.POST.get(f'choice_text_{question_id}_{choice_id}')
+                        is_correct = request.POST.get(f'is_correct_{question_id}_{choice_id}') == 'on'
+                        
+                        if choice_text:
+                            choice.text = choice_text
+                            choice.is_correct = is_correct
+                            choice.save()
+                        else:
+                            choice.delete()
+            
+            # Add new questions
+            for key, value in request.POST.items():
+                if key.startswith('question_text_new_'):
+                    question_id = key.split('_')[-1]
+                    question_text = value
+                    question_marks = request.POST.get(f'question_marks_new_{question_id}')
+                    num_choices = request.POST.get(f'num_choices_new_{question_id}')
+                    
+                    if question_text:
+                        # Create new question
+                        question = Question.objects.create(
+                            test=test,
+                            text=question_text,
+                            marks=int(question_marks) if question_marks else 1,
+                            num_choices=int(num_choices) if num_choices else 4
+                        )
+                        
+                        # Add choices for new question
+                        for i in range(1, int(num_choices) + 1):
+                            choice_text = request.POST.get(f'choice_text_new_{question_id}_{i}')
+                            is_correct = request.POST.get(f'is_correct_new_{question_id}_{i}') == 'on'
+                            
+                            if choice_text:
+                                Choice.objects.create(
+                                    question=question,
+                                    text=choice_text,
+                                    is_correct=is_correct
+                                )
+            
+            # Update total questions and marks
+            test.total_questions = test.questions.count()
+            test.total_marks = sum(q.marks for q in test.questions.all())
+            test.save()
+            
+            messages.success(request, 'Test updated successfully!')
+            return redirect('list_tests')
+        else:
+            messages.error(request, 'Please correct the errors below.')
+    else:
+        form = testForm(instance=test)
+        # Convert duration to minutes for the template
+        duration_minutes = int(test.duration.total_seconds() // 60)
+    
+    return render(request, 'update_test.html', {
+        'test': test, 
+        'form': form,
+        'duration_minutes': duration_minutes
+    })
+
+@login_required
+@require_POST
+def delete_student(request, student_id):
+    student = get_object_or_404(Student, id=student_id)
+    batch_id = student.batch.id
+    
+    try:
+        student.delete()
+        return JsonResponse({'success': True})
+    except Exception as e:
+        return JsonResponse({'success': False, 'error': str(e)})

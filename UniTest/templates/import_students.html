@@ -1,0 +1,217 @@
+{% extends 'base.html' %} {% block content %}
+
+<div class="container import-students-container">
+    <a href="{% url 'view_batch_students' batch.id %}" class="back-link"> <i class="fas fa-arrow-left"></i> Back to Students </a>
+    <h1 class="import-title">Import Students for <span class="highlight">{{ batch }}</span></h1>
+
+    {% if messages %}
+    <div class="messages">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">{{ message }}</div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <div class="card import-card">
+        <header class="card-header">
+            <h2>Import Students from CSV</h2>
+        </header>
+        <div class="card-content">
+            <form method="POST" enctype="multipart/form-data" class="import-form">
+                {% csrf_token %}
+                <div class="form-item">
+                    {{ form.csv_file.label_tag }} {{ form.csv_file }} {% if form.csv_file.help_text %}
+                    <small class="form-text text-muted">{{ form.csv_file.help_text }}</small>
+                    {% endif %} {% if form.csv_file.errors %}
+                    <div class="alert alert-error">{{ form.csv_file.errors }}</div>
+                    {% endif %}
+                </div>
+                <button type="submit" class="button import-btn">Import Students</button>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4 instructions-card">
+        <header class="card-header">
+            <h2>CSV Format Instructions</h2>
+        </header>
+        <div class="card-content">
+            <p>Your CSV file should have the following columns:</p>
+            <ul>
+                <li><strong>Name</strong> - Student's full name</li>
+                <li><strong>Email</strong> - Student's email address (must be unique)</li>
+                <li><strong>Roll Number</strong> - Student's roll number (must be unique)</li>
+            </ul>
+            <p>Example CSV format:</p>
+            <div class="csv-preview">
+                <pre>
+Name,Email,Roll Number
+John Doe,john.doe@example.com,2024001
+Jane Smith,jane.smith@example.com,2024002</pre
+                >
+            </div>
+        </div>
+    </div>
+</div>
+
+<style>
+    .import-students-container {
+        max-width: 540px;
+        margin: 0 auto;
+        padding: 2rem 0 3rem 0;
+    }
+    .back-link {
+        display: inline-flex;
+        align-items: center;
+        color: #4e8cff;
+        text-decoration: none;
+        font-size: 1rem;
+        margin-bottom: 1.5rem;
+        transition: color 0.2s;
+    }
+    .back-link:hover {
+        color: #2563eb;
+    }
+    .back-link i {
+        margin-right: 0.5rem;
+    }
+    .import-title {
+        font-size: 2rem;
+        font-weight: 700;
+        margin-bottom: 2rem;
+        color: #23272f;
+    }
+    .import-title .highlight {
+        color: #4e8cff;
+        font-weight: 600;
+    }
+    .import-card,
+    .instructions-card {
+        margin-bottom: 2.5rem;
+        border-radius: 14px;
+        box-shadow: 0 4px 24px 0 rgba(0, 0, 0, 0.07);
+        background: #fff;
+        border: 1px solid #e6e8ef;
+    }
+    .instructions-card {
+        background: #f7f8fa;
+        border: 1px solid #e6e8ef;
+    }
+    .card-header {
+        padding: 1.25rem 1.5rem 0.5rem 1.5rem;
+        border-bottom: 1px solid #e6e8ef;
+        background: transparent;
+    }
+    .card-header h2 {
+        font-size: 1.2rem;
+        font-weight: 600;
+        color: #4e8cff;
+        margin: 0;
+    }
+    .card-content {
+        padding: 1.5rem;
+        color: #23272f;
+    }
+    .import-form {
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
+    }
+    .form-item label {
+        font-weight: 500;
+        color: #3a4a6b;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    .form-item input[type='file'] {
+        width: 100%;
+        padding: 0.5rem;
+        border: 1px solid #e6e8ef;
+        border-radius: 6px;
+        background: #fff;
+        color: #23272f;
+    }
+    .form-text {
+        color: #4e8cff;
+        font-size: 0.95rem;
+        margin-top: 0.25rem;
+    }
+    .import-btn {
+        width: 100%;
+        padding: 0.75rem 0;
+        font-size: 1.1rem;
+        font-weight: 600;
+        background: linear-gradient(90deg, #4e8cff 0%, #7da6ff 100%);
+        color: #fff;
+        border: none;
+        border-radius: 6px;
+        box-shadow: 0 2px 8px 0 rgba(125, 166, 255, 0.1);
+        transition: background 0.2s;
+        margin-top: 0.5rem;
+    }
+    .import-btn:hover {
+        background: linear-gradient(90deg, #7da6ff 0%, #4e8cff 100%);
+    }
+    .messages {
+        margin-bottom: 1.5rem;
+    }
+    .alert {
+        padding: 1rem;
+        border-radius: 6px;
+        margin-bottom: 0.5rem;
+        font-size: 1rem;
+    }
+    .alert-success {
+        background-color: #e6fbe6;
+        color: #217a21;
+        border: 1px solid #b6eab6;
+    }
+    .alert-error {
+        background-color: #fdeaea;
+        color: #a12a2a;
+        border: 1px solid #f5bcbc;
+    }
+    .instructions-card ul {
+        margin: 0 0 1rem 1.2rem;
+        color: #23272f;
+        font-size: 1rem;
+    }
+    .csv-preview {
+        background: #f3f6fa;
+        border: 1px solid #e6e8ef;
+        border-radius: 6px;
+        padding: 1rem;
+        margin-top: 0.5rem;
+        color: #23272f;
+        font-size: 1rem;
+        overflow-x: auto;
+    }
+    pre {
+        background: transparent;
+        border: none;
+        margin: 0;
+        padding: 0;
+        color: inherit;
+        font-size: inherit;
+    }
+    @media (max-width: 600px) {
+        .import-students-container {
+            padding: 1rem 0 2rem 0;
+        }
+        .import-title {
+            font-size: 1.2rem;
+        }
+        .import-card,
+        .instructions-card {
+            margin-bottom: 1.2rem;
+        }
+        .card-content {
+            padding: 1rem;
+        }
+        .import-btn {
+            font-size: 1rem;
+        }
+    }
+</style>
+
+{% endblock %}
