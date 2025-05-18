@@ -1,65 +1,42 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="card">
     <div class="card-content">
         <div class="questions-header">
-            <h3>Add Questions for {{ test.title }}</h3>
-            <button type="button" class="button outline" id="addQuestionBtn">
-                <span class="icon">+</span>
-                Add Question
-            </button>
+            <h3>Add Questions for {{ test.name }}</h3>
         </div>
-
         <form method="post">
             {% csrf_token %}
             <div class="questions-container" id="questionsContainer">
                 {% for i in total_questions %}
-                    <div class="question-card">
-                        <div class="question-header">
-                            <h4>Question {{ forloop.counter }}</h4>
-                            <button type="button" class="button ghost delete-question">
-                                <span class="icon trash">×</span>
-                            </button>
-                        </div>
-
-                        <!-- Question Text -->
-                        <div class="form-item">
-                            <label>Question Text</label>
-                            <textarea name="question_{{ i }}" required></textarea>
-                            <div class="error-message"></div>
-                        </div>
-
-                        <!-- Marks -->
-                        <div class="form-item">
-                            <label>Marks</label>
-                            <input type="number" name="question_marks_{{ i }}" value="1" min="1" required />
-                            <div class="error-message"></div>
-                        </div>
-
-                        <!-- Number of Choices -->
-                        <div class="form-item">
-                            <label>Number of Choices</label>
-                            <input type="number" name="num_choices_{{ i }}" value="4" min="2" max="6" required />
-                            <div class="error-message"></div>
-                        </div>
-
-                        <!-- Options -->
-                        <div class="options-container">
-                            <label>Options</label>
-                            {% for j in "1234" %}
-                                <div class="option-item">
-                                    <span class="option-label">{{ forloop.counter|stringformat:"c"|upper }}.</span>
-                                    <input type="text" name="choice_{{ i }}_{{ j }}" required />
-                                    <input type="checkbox" name="is_correct_{{ i }}_{{ j }}" /> Correct
-                                    <div class="error-message"></div>
-                                </div>
-                            {% endfor %}
-                        </div>
+                <div class="question-card">
+                    <div class="question-header">
+                        <h4>Question {{ forloop.counter }}</h4>
                     </div>
+                    <div class="form-item">
+                        <label>Question Text</label>
+                        <textarea name="question_{{ i }}" required></textarea>
+                    </div>
+                    <div class="form-item">
+                        <label>Marks</label>
+                        <input type="number" name="question_marks_{{ i }}" value="1" min="1" required />
+                    </div>
+                    <div class="form-item">
+                        <label>Number of Choices</label>
+                        <input type="number" name="num_choices_{{ i }}" value="4" min="2" max="6" required />
+                    </div>
+                    <div class="options-container" id="options_{{ i }}">
+                        <label>Options</label>
+                        {% for j in "1234" %}
+                        <div class="option-item">
+                            <span class="option-label">{{ forloop.counter|stringformat:"c"|upper }}.</span>
+                            <input type="text" name="choice_{{ i }}_{{ j }}" required />
+                            <input type="checkbox" name="is_correct_{{ i }}_{{ j }}" /> Correct
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
                 {% endfor %}
             </div>
-
-            <!-- Submit Button -->
             <div class="form-actions">
                 <button type="submit" class="button primary">Save Questions</button>
             </div>

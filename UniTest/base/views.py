@@ -85,11 +85,28 @@ def create_test(request):
     if request.method == 'POST':
         form = testForm(request.POST)
         if form.is_valid():
-            form.save()
-            return redirect('add_question', test_id=form.instance.id)  
+            test = form.save()
+            # Parse questions and choices from POST data
+            total_questions = int(request.POST.get('total_questions', 1))
+            for i in range(1, total_questions + 1):
+                question_text = request.POST.get(f'question_{i}')
+                question_marks = request.POST.get(f'question_marks_{i}', 0)
+                question_marks = int(question_marks) if str(question_marks).isdigit() else 0
+                num_choices = request.POST.get(f'num_choices_{i}', 4)
+                num_choices = int(num_choices) if str(num_choices).isdigit() else 4
+                if question_text:
+                    question = Question.objects.create(test=test, text=question_text, marks=question_marks, num_choices=num_choices)
+                    for j in range(1, num_choices + 1):
+                        choice_text = request.POST.get(f'choice_{i}_{j}')
+                        is_correct = request.POST.get(f'is_correct_{i}_{j}') == 'on'
+                        if choice_text:
+                            Choice.objects.create(
+                                question=question, text=choice_text,
+                                is_correct=is_correct
+                            )
+            return redirect('view_test', test_id=test.id)
     else:
         form = testForm()
-
     return render(request, 'create_test.html', {'form': form})
 
 @login_required
@@ -98,25 +115,34 @@ def add_question(request, test_id):
     total_questions = test.total_questions
 
     if request.method == 'POST':
-        for i in range(1, total_questions + 1):
+        from django.http import HttpResponse
+        return HttpResponse("POST received in add_question view!")  # TEMP DEBUG
+        print(f"Processing {total_questions} questions for test {test.id}")
+        for i in range(1, total_questions + 1): 
             question_text = request.POST.get(f'question_{i}')
             question_marks = request.POST.get(f'question_marks_{i}', 0)
             question_marks = int(question_marks) if question_marks.isdigit() else 0
             num_choices = request.POST.get(f'num_choices_{i}', 4)
             num_choices = int(num_choices) if num_choices.isdigit() else 4
 
+            print(f"Question {i}: text='{question_text}', marks={question_marks}, num_choices={num_choices}")
+
             if question_text:
                 question = Question.objects.create(test=test, text=question_text, marks=question_marks)
+                print(f"Created question {question.id}")
 
                 for j in range(1, num_choices + 1):
                     choice_text = request.POST.get(f'choice_{i}_{j}')
                     is_correct = request.POST.get(f'is_correct_{i}_{j}') == 'on' 
 
+                    print(f"Choice {j}: text='{choice_text}', is_correct={is_correct}")
+
                     if choice_text:
-                        Choice.objects.get_or_create(
+                        choice = Choice.objects.create(
                             question=question, text=choice_text,
-                            defaults={'is_correct': is_correct}
+                            is_correct=is_correct
                         )
+                        print(f"Created choice {choice.id}")
 
         return redirect('view_test', test_id=test.id)  
 
@@ -237,6 +263,24 @@ def delete_batch(request, batch_id):
 
     return render(request, 'batches.html') 
 
+@login_required
+def update_batch(request, batch_id):
+    batch = get_object_or_404(Batch, id=batch_id)
+    
+    if request.method == "POST":
+        form = batchForm(request.POST, instance=batch)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Batch updated successfully!")
+            return redirect('batches')
+    else:
+        form = batchForm(instance=batch)
+    
+    return render(request, 'update_batch.html', {
+        'form': form,
+        'batch': batch
+    })
+
 def delete_course(request, course_id):
     course = get_object_or_404(Course, id = course_id)
 
@@ -259,20 +303,6 @@ def update_course(request, course_id):
         form = courseForm(instance=course)
 
     return render(request, 'update_course.html', {'course': course, 'form':form})
-
-def update_batch(request, batch_id):
-    batch = Batch.objects.get(id=batch_id)
-
-    if request.method == 'POST':
-        form = batchForm(request.POST, instance=batch)
-
-        if form.is_valid():
-            form.save()
-            return redirect('batches') 
-    else:
-        form = batchForm(instance=batch)
-
-    return render(request, 'update_batch.html', {'batch': batch, 'form': form})
 
 @login_required
 def list_tests(request):

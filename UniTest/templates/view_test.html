@@ -1,5 +1,4 @@
-{% extends 'base.html' %}
-{% block content %}
+{% extends 'base.html' %} {% block content %}
 <div class="container">
     <header class="test-header">
         <div class="university-info">
@@ -15,28 +14,32 @@
 
     <main class="test-content">
         <h2 class="test-name">{{ test.name }}</h2>
-        
+
         <div class="test-metadata">
-            <p><i data-lucide="clock"></i> Duration:   {{ test.duration }}</p>
-            <p><i data-lucide="award"></i> Total Marks:  {{ test.total_marks }}</p>
+            <p><i data-lucide="clock"></i> Duration: {{ test.duration }}</p>
+            <p><i data-lucide="award"></i> Total Marks: {{ test.total_marks }}</p>
         </div>
 
         <div class="questions-list">
-            {% for question in questions %}
-                <div class="question-card">
-                    <h3>Question {{ forloop.counter }}</h3>
-                    <p class="question-text">{{ question.text }}</p>
-                    <div class="options">
-                        {% for choice in question.choices.all %}
-                            <div class="option">
-                                <input type="radio" id="q{{ question.id }}_{{ forloop.counter }}" name="q{{ question.id }}" value="{{ choice.id }}">
-                                <label for="q{{ question.id }}_{{ forloop.counter }}">{{ choice.text }}</label>
-                                {% if choice.is_correct %}<strong>(Correct)</strong>{% endif %}
-                            </div>
-                        {% endfor %}
+            {% if questions %} {% for question in questions %}
+            <div class="question-card">
+                <h3>Question {{ forloop.counter }}</h3>
+                <p class="question-text">{{ question.text }}</p>
+                <div class="options">
+                    {% if question.choices.all %} {% for choice in question.choices.all %}
+                    <div class="option">
+                        <input type="radio" id="q{{ question.id }}_{{ forloop.counter }}" name="q{{ question.id }}" value="{{ choice.id }}" />
+                        <label for="q{{ question.id }}_{{ forloop.counter }}">{{ choice.text }}</label>
+                        {% if choice.is_correct %}<strong>(Correct)</strong>{% endif %}
                     </div>
+                    {% endfor %} {% else %}
+                    <p class="text-muted">No choices available for this question.</p>
+                    {% endif %}
                 </div>
-            {% endfor %}
+            </div>
+            {% endfor %} {% else %}
+            <p class="text-muted">No questions have been added to this test yet.</p>
+            {% endif %}
         </div>
     </main>
 </div>

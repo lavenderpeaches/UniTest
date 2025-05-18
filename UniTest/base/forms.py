@@ -1,11 +1,27 @@
 from django  import forms
 from .models import Test, Batch, Course, Question, Choice, Student
+from datetime import timedelta
 
 
 class testForm(forms.ModelForm):
+    duration_minutes = forms.IntegerField(label='Duration (minutes)', min_value=1, required=True)
+
     class Meta:
         model = Test
-        exclude = ['user', 'status', 'is_results_visible','total_questions', 'total_marks']
+        fields = ['name', 'course', 'batch', 'total_marks', 'total_questions']
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.instance and self.instance.duration:
+            self.fields['duration_minutes'].initial = int(self.instance.duration.total_seconds() // 60)
+
+    def save(self, commit=True):
+        instance = super().save(commit=False)
+        minutes = self.cleaned_data.get('duration_minutes', 1)
+        instance.duration = timedelta(minutes=minutes)
+        if commit:
+            instance.save()
+        return instance
 
 class batchForm(forms.ModelForm):
     class Meta:

@@ -1,106 +1,191 @@
-{% extends 'base.html' %}
-{% load static %}
-
-{% block title %}Create Test | UniTest{% endblock %}
-
-{% block content %}
+{% extends 'base.html' %} {% load static %} {% load widget_tweaks %} {% block title %}Create Test | UniTest{% endblock %} {% block content %}
 <div class="container">
     <div class="header">
         <h2>Create Test</h2>
         <p class="text-muted">Create a new multiple choice question test for your students.</p>
     </div>
-<div id = "app">
-    <form id="testForm" method="post" action="{% url 'create_test' %}">
-        {% csrf_token %}
-        <!-- Test Details Card -->
-        <div class="card">
-            <div class="card-content">
-                <div class="form-grid">
-                    {% for field in form %}
+    <div id="app">
+        <form id="testForm" method="post" action="{% url 'create_test' %}">
+            {% csrf_token %}
+            <!-- Test Details Card -->
+            <div class="card">
+                <div class="card-content">
+                    <div class="form-grid">
+                        {% for field in form.visible_fields %}
                         <div class="form-item">
-                            {{ field.label_tag }}
-                            {# Add v-model only to the title field #}
-                            {% if field.name == "title" %}
+                            {{ field.label_tag }} {% if field.name == "duration_minutes" %}
+                            <div style="display: flex; align-items: center">
                                 {{ field|add_class:"form-control" }}
-                            {% else %}
-                                {{ field }}
-                            {% endif %}
-                            {% if field.errors %}
-                                <div class="error-message">{{ field.errors }}</div>
+                                <span style="margin-left: 8px">minutes</span>
+                            </div>
+                            {% else %} {{ field|add_class:"form-control" }} {% endif %} {% if field.errors %}
+                            <div class="error-message">{{ field.errors }}</div>
                             {% endif %}
                         </div>
-                    {% endfor %}
+                        {% endfor %}
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Questions Card -->
-
-        <div class="card">
-        <div class="card-content">
-        <div class = "headerForQuestions">
-                <p>Total Question:</p>
-                <p>Total Marks:</p>
-        </div>
-        <div class="questions-header">
-            <h3 >Add Questions for {{ test_title }}</h3>
-        </div>
-        <div class="questions-container" id="questionsContainer">
-
-                    <div class="question-card">
-                        <div class="question-header">
-                            <h4>Question {{ forloop.counter }}</h4>
-                            <button type="button" class="button ghost delete-question">
-                                <span class="icon trash">×</span>
-                            </button>
-                        </div>
-
-                        <!-- Question Text -->
-                        <div class="form-item">
-                            <label>Question Text</label>
-                            <textarea name="question_{{ i }}" required></textarea>
-                            <div class="error-message"></div>
-                        </div>
-
-                        <!-- Marks -->
-                        <div class="form-item">
-                            <label>Marks</label>
-                            <input type="number" name="question_marks_{{ i }}" value="1" min="1" required />
-                            <div class="error-message"></div>
-                        </div>
-
-                        <!-- Number of Choices -->
-                        <div class="form-item">
-                            <label>Number of Choices</label>
-                            <input type="number" name="num_choices_{{ i }}" value="4" min="2" max="6" required />
-                            <div class="error-message"></div>
-                        </div>
-
-                        <!-- Options -->
-                        <div class="options-container">
-                            <label>Options</label>
-                            {% for j in "1234" %}
-                                <div class="option-item">
-                                    <span class="option-label">{{ forloop.counter|stringformat:"c"|upper }}.</span>
-                                    <input type="text" name="choice_{{ i }}_{{ j }}" required />
-                                    <input type="checkbox" name="is_correct_{{ i }}_{{ j }}" /> Correct
-                                    <div class="error-message"></div>
-                                </div>
-                            {% endfor %}
-                        </div>
+            <!-- Questions Card -->
+            <div class="card">
+                <div class="card-content">
+                    <div class="questions-header">
+                        <h3>Add Questions</h3>
+                    </div>
+                    <div class="questions-container" id="questionsContainer">
+                        <!-- Questions will be dynamically added here by JS -->
                     </div>
                     <button type="button" class="button outline" id="addQuestionBtn">
                         <span class="icon">+</span>
                         Add Question
                     </button>
+                </div>
             </div>
-        
             <!-- Submit Button -->
             <div class="form-actions">
                 <button type="submit" class="create-button">Create Test</button>
             </div>
-    </form>
+        </form>
+    </div>
 </div>
-</div>
+
+<script>
+    // Helper to get letter (A, B, C, ...)
+    function getLetter(idx) {
+        return String.fromCharCode(65 + idx);
+    }
+
+    function createOptionHTML(qIdx, oIdx) {
+        return `
+        <div class="option-item">
+            <span class="option-label">${getLetter(oIdx)}.</span>
+            <input type="text" name="choice_${qIdx}_${oIdx + 1}" required />
+            <input type="checkbox" name="is_correct_${qIdx}_${oIdx + 1}" /> Correct
+            <div class="error-message"></div>
+        </div>
+    `;
+    }
+
+    function createQuestionHTML(qIdx, numChoices = 4) {
+        let optionsHTML = '';
+        for (let oIdx = 0; oIdx < numChoices; oIdx++) {
+            optionsHTML += createOptionHTML(qIdx, oIdx);
+        }
+        return `
+        <div class="question-card" data-qidx="${qIdx}">
+            <div class="question-header">
+                <h4>Question ${qIdx}</h4>
+                <button type="button" class="button ghost delete-question" onclick="removeQuestion(this)">
+                    <span class="icon trash">×</span>
+                </button>
+            </div>
+            <div class="form-item">
+                <label>Question Text</label>
+                <textarea name="question_${qIdx}" required></textarea>
+                <div class="error-message"></div>
+            </div>
+            <div class="form-item">
+                <label>Marks</label>
+                <input type="number" name="question_marks_${qIdx}" value="1" min="1" required />
+                <div class="error-message"></div>
+            </div>
+            <div class="form-item">
+                <label>Number of Choices</label>
+                <input type="number" class="num-choices-input" name="num_choices_${qIdx}" value="${numChoices}" min="2" max="6" required data-qidx="${qIdx}" />
+                <div class="error-message"></div>
+            </div>
+            <div class="options-container">
+                <label>Options</label>
+                <div class="options-list">
+                    ${optionsHTML}
+                </div>
+            </div>
+        </div>
+    `;
+    }
+
+    function updateOptionsForQuestion(qCard) {
+        const qIdx = parseInt(qCard.getAttribute('data-qidx'));
+        const numChoicesInput = qCard.querySelector('.num-choices-input');
+        let numChoices = parseInt(numChoicesInput.value) || 4;
+        numChoices = Math.max(2, Math.min(6, numChoices));
+        const optionsList = qCard.querySelector('.options-list');
+        optionsList.innerHTML = '';
+        for (let oIdx = 0; oIdx < numChoices; oIdx++) {
+            optionsList.innerHTML += createOptionHTML(qIdx, oIdx);
+        }
+    }
+
+    function removeQuestion(btn) {
+        const qCard = btn.closest('.question-card');
+        qCard.remove();
+        updateQuestionNumbers();
+    }
+
+    function updateQuestionNumbers() {
+        const questionsContainer = document.getElementById('questionsContainer');
+        const questionCards = questionsContainer.querySelectorAll('.question-card');
+        // Update question headers and data-qidx
+        questionCards.forEach((card, idx) => {
+            card.setAttribute('data-qidx', idx + 1);
+            card.querySelector('.question-header h4').textContent = `Question ${idx + 1}`;
+            // Also update names of fields if needed (optional for backend parsing)
+        });
+        // Update total_questions field
+        const totalQuestionsInput = document.getElementById('id_total_questions');
+        if (totalQuestionsInput) {
+            totalQuestionsInput.value = questionCards.length;
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+        let questionCount = 0;
+        const questionsContainer = document.getElementById('questionsContainer');
+        const addQuestionBtn = document.getElementById('addQuestionBtn');
+        const totalQuestionsInput = document.getElementById('id_total_questions');
+
+        function addQuestion(numChoices = 4) {
+            questionCount++;
+            questionsContainer.insertAdjacentHTML('beforeend', createQuestionHTML(questionCount, numChoices));
+            const qCard = questionsContainer.lastElementChild;
+            // Listen for changes in number of choices
+            qCard.querySelector('.num-choices-input').addEventListener('input', function () {
+                updateOptionsForQuestion(qCard);
+            });
+            updateQuestionNumbers();
+        }
+
+        addQuestionBtn.addEventListener('click', function () {
+            addQuestion();
+        });
+
+        // Sync: When total_questions changes, add/remove question cards
+        if (totalQuestionsInput) {
+            totalQuestionsInput.addEventListener('change', function () {
+                let desired = parseInt(this.value);
+                if (isNaN(desired) || desired < 1) return; // Only update if valid
+                let current = questionsContainer.querySelectorAll('.question-card').length;
+                while (current < desired) {
+                    addQuestion();
+                    current++;
+                }
+                while (current > desired) {
+                    questionsContainer.lastElementChild.remove();
+                    current--;
+                }
+                updateQuestionNumbers();
+            });
+        }
+
+        // Add the first question by default (or as many as total_questions says)
+        let initialQuestions = 1;
+        if (totalQuestionsInput && totalQuestionsInput.value) {
+            initialQuestions = Math.max(1, parseInt(totalQuestionsInput.value));
+        }
+        for (let i = 0; i < initialQuestions; i++) {
+            addQuestion();
+        }
+    });
+</script>
 
 {% endblock %}
