@@ -32,4 +32,8 @@ urlpatterns = [
     path('take-test/<int:attempt_id>/',         views.take_test,                name='take_test'),
     path('reports/',                            views.reports,                  name='reports'),
     path('attempt/<int:attempt_id>/',           views.view_attempt,             name='view_attempt'),
+    
+    # New URLs for test import functionality
+    path('import-test/<int:test_id>/',          views.import_test,             name='import_test'),
+    path('download-template/',                  views.download_template,         name='download_template'),
 ]

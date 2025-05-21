@@ -1,0 +1,6 @@
+Question Text,Marks,Number of Choices,Choice 1 Text,Choice 1 Is Correct,Choice 2 Text,Choice 2 Is Correct,Choice 3 Text,Choice 3 Is Correct,Choice 4 Text,Choice 4 Is Correct
+"What is the capital of France?",1,4,London,,Paris,True,Berlin,,Madrid,
+"Which planet is known as the Red Planet?",1,4,Venus,,Mars,True,Jupiter,,Saturn,
+"What is the largest mammal in the world?",1,4,Elephant,,Blue Whale,True,Giraffe,,Hippopotamus,
+"What is the chemical symbol for gold?",1,4,Ag,,Au,True,Fe,,Cu,
+"What is the square root of 144?",1,4,10,,12,True,14,,16,

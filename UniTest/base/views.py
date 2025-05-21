@@ -16,6 +16,8 @@ from django.views.decorators.http import require_POST
 import csv
 import io
 from django.http import HttpResponseForbidden
+import pandas as pd
+import os
 
 # Create your views here.
 
@@ -83,6 +85,61 @@ def homePage(request):
 @login_required
 def create_test(request):
     if request.method == 'POST':
+        # Check if this is a file upload
+        if 'excel_file' in request.FILES:
+            excel_file = request.FILES['excel_file']
+            try:
+                # Read the CSV file
+                df = pd.read_csv(excel_file)
+                
+                # Create the test first
+                test = Test.objects.create(
+                    name=request.POST.get('name', 'Imported Test'),
+                    course_id=request.POST.get('course'),
+                    batch_id=request.POST.get('batch'),
+                    total_marks=0,  # Will be calculated
+                    total_questions=0,  # Will be calculated
+                    duration=timedelta(minutes=int(request.POST.get('duration_minutes', 60))),
+                    user=request.user
+                )
+                
+                # Process each row in the CSV file
+                total_marks = 0
+                for index, row in df.iterrows():
+                    # Create question
+                    question = Question.objects.create(
+                        test=test,
+                        text=row['Question Text'],
+                        marks=row['Marks'],
+                        num_choices=row['Number of Choices']
+                    )
+                    total_marks += row['Marks']
+                    
+                    # Create choices
+                    for i in range(1, int(row['Number of Choices']) + 1):
+                        choice_text = row[f'Choice {i} Text']
+                        # Handle empty fields as False
+                        is_correct = pd.notna(row[f'Choice {i} Is Correct']) and row[f'Choice {i} Is Correct']
+                        
+                        Choice.objects.create(
+                            question=question,
+                            text=choice_text,
+                            is_correct=is_correct
+                        )
+                
+                # Update test totals
+                test.total_questions = test.questions.count()
+                test.total_marks = total_marks
+                test.save()
+                
+                messages.success(request, 'Test imported successfully!')
+                return redirect('view_test', test_id=test.id)
+                
+            except Exception as e:
+                messages.error(request, f'Error importing test: {str(e)}')
+                return redirect('create_test')
+        
+        # Regular form submission
         form = testForm(request.POST)
         if form.is_valid():
             test = form.save()
@@ -107,7 +164,16 @@ def create_test(request):
             return redirect('view_test', test_id=test.id)
     else:
         form = testForm()
-    return render(request, 'create_test.html', {'form': form})
+    
+    # Get courses and batches for the template
+    courses = Course.objects.all()
+    batches = Batch.objects.all()
+    
+    return render(request, 'create_test.html', {
+        'form': form,
+        'courses': courses,
+        'batches': batches
+    })
 
 @login_required
 def add_question(request, test_id):
@@ -599,3 +665,73 @@ def delete_student(request, student_id):
         return JsonResponse({'success': True})
     except Exception as e:
         return JsonResponse({'success': False, 'error': str(e)})
+
+@login_required
+def import_test(request, test_id):
+    test = get_object_or_404(Test, id=test_id)
+    
+    if request.method == 'POST':
+        excel_file = request.FILES.get('excel_file')
+        
+        if not excel_file:
+            messages.error(request, 'Please select a file to upload')
+            return redirect('import_test', test_id=test_id)
+            
+        try:
+            # Read the CSV file
+            df = pd.read_csv(excel_file)
+            
+            # Process each row in the CSV file
+            for index, row in df.iterrows():
+                # Create question
+                question = Question.objects.create(
+                    test=test,
+                    text=row['Question Text'],
+                    marks=row['Marks'],
+                    num_choices=row['Number of Choices']
+                )
+                
+                # Create choices
+                for i in range(1, int(row['Number of Choices']) + 1):
+                    choice_text = row[f'Choice {i} Text']
+                    # Handle empty fields as False
+                    is_correct = pd.notna(row[f'Choice {i} Is Correct']) and row[f'Choice {i} Is Correct']
+                    
+                    Choice.objects.create(
+                        question=question,
+                        text=choice_text,
+                        is_correct=is_correct
+                    )
+            
+            messages.success(request, 'Questions imported successfully!')
+            return redirect('view_test', test_id=test.id)
+            
+        except Exception as e:
+            messages.error(request, f'Error importing questions: {str(e)}')
+            return redirect('import_test', test_id=test_id)
+            
+    return render(request, 'import_test.html', {'test': test})
+
+@login_required
+def download_template(request):
+    try:
+        # Get the absolute path to the template file
+        csv_path = os.path.join(settings.BASE_DIR, 'test_questions_template.csv')
+        
+        # Debug information
+        print(f"Looking for template at: {csv_path}")
+        print(f"File exists: {os.path.exists(csv_path)}")
+        
+        if not os.path.exists(csv_path):
+            messages.error(request, 'Template file not found. Please contact support.')
+            return redirect('create_test')
+            
+        with open(csv_path, 'rb') as csv_file:
+            response = HttpResponse(csv_file.read(), content_type='text/csv')
+            response['Content-Disposition'] = 'attachment; filename=test_questions_template.csv'
+            return response
+            
+    except Exception as e:
+        print(f"Error in download_template: {str(e)}")
+        messages.error(request, f'Error downloading template: {str(e)}')
+        return redirect('create_test')

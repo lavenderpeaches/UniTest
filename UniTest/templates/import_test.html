@@ -1,0 +1,45 @@
+{% extends 'base.html' %} {% block title %}Import Test Questions | UniTest{% endblock %} {% block content %}
+<div class="container">
+    <div class="header">
+        <h2>Import Test Questions</h2>
+        <p class="text-muted">Upload an Excel file containing test questions and choices.</p>
+    </div>
+
+    <div class="card">
+        <div class="card-content">
+            <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                <div class="form-group">
+                    <label for="excel_file">Select Excel File</label>
+                    <input type="file" name="excel_file" id="excel_file" accept=".xlsx, .xls" required class="form-control" />
+                </div>
+                <div class="form-group mt-3">
+                    <button type="submit" class="btn btn-primary">Import Questions</button>
+                    <a href="{% url 'view_test' test.id %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="card mt-4">
+        <div class="card-content">
+            <h3>Excel Template Format</h3>
+            <p>The Excel file should have the following columns:</p>
+            <ul>
+                <li>Question Text</li>
+                <li>Marks</li>
+                <li>Number of Choices</li>
+                <li>Choice 1 Text</li>
+                <li>Choice 1 Is Correct (True/False)</li>
+                <li>Choice 2 Text</li>
+                <li>Choice 2 Is Correct (True/False)</li>
+                <li>Choice 3 Text</li>
+                <li>Choice 3 Is Correct (True/False)</li>
+                <li>Choice 4 Text</li>
+                <li>Choice 4 Is Correct (True/False)</li>
+            </ul>
+            <a href="{% url 'download_template' %}" class="btn btn-secondary">Download Template</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

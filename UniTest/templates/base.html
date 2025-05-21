@@ -210,6 +210,26 @@
                 </div>
             </aside>
 
+    {% if messages %}
+    <div class="messages" id="messages-block">
+        {% for message in messages %}
+        <div class="alert {% if message.tags %}alert-{{ message.tags }}{% endif %}">
+            {{ message }}
+            <button class="close-message" onclick="this.parentElement.style.display='none';">&times;</button>
+        </div>
+        {% endfor %}
+    </div>
+    <script>
+    // Auto-hide messages after 5 seconds
+    setTimeout(function() {
+        var messagesBlock = document.getElementById('messages-block');
+        if (messagesBlock) {
+            messagesBlock.style.display = 'none';
+        }
+    }, 5000);
+    </script>
+    {% endif %}
+
     {% block content %}
     
     {% endblock %}

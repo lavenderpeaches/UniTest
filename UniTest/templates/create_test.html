@@ -4,50 +4,208 @@
         <h2>Create Test</h2>
         <p class="text-muted">Create a new multiple choice question test for your students.</p>
     </div>
+
+    <!-- Template Download Section -->
+    <div class="card mb-4">
+        <div class="card-content">
+            <div class="instructions-box" style="background: #f7f8fa; border: 1px solid #e6e8ef; border-radius: 8px; padding: 18px; margin-bottom: 18px">
+                <strong>Instructions for CSV Import:</strong>
+                <ul style="margin-top: 10px">
+                    <li>Each row represents one question.</li>
+                    <li>Only one choice can be marked as correct (<code>True</code>).</li>
+                    <li>Empty "Is Correct" fields are automatically treated as <code>False</code>.</li>
+                    <li>Number of Choices should match the number of choices you provide.</li>
+                    <li>Marks can be any positive number.</li>
+                    <li>
+                        <b>Do not include any other text other than the question, choices, and correct answer.</b>
+                    </li>
+                    <li>
+                        <b>Do not reorder the columns.</b>
+                    </li>
+                </ul>
+            </div>
+            <div class="template-download">
+                <div class="template-info">
+                    <h3>Get Started</h3>
+                    <p class="text-muted">Download our template to prepare your test questions in CSV format.</p>
+                    <a href="{% url 'download_template' %}" class="btn btn-primary"> <i class="fas fa-download"></i> Download Question Template </a>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <div id="app">
-        <form id="testForm" method="post" action="{% url 'create_test' %}">
-            {% csrf_token %}
-            <!-- Test Details Card -->
-            <div class="card">
-                <div class="card-content">
+        <!-- File Upload Section -->
+        <div class="card mb-4">
+            <div class="card-content">
+                <h3>Create Test from File</h3>
+                <p class="text-muted">Upload your prepared CSV file to create a test instantly.</p>
+                <form method="post" enctype="multipart/form-data" class="import-form">
+                    {% csrf_token %}
                     <div class="form-grid">
-                        {% for field in form.visible_fields %}
                         <div class="form-item">
-                            {{ field.label_tag }} {% if field.name == "duration_minutes" %}
-                            <div style="display: flex; align-items: center">
-                                {{ field|add_class:"form-control" }}
-                                <span style="margin-left: 8px">minutes</span>
-                            </div>
-                            {% else %} {{ field|add_class:"form-control" }} {% endif %} {% if field.errors %}
-                            <div class="error-message">{{ field.errors }}</div>
-                            {% endif %}
+                            <label for="name">Test Name</label>
+                            <input type="text" name="name" id="name" class="form-control" required />
                         </div>
-                        {% endfor %}
+                        <div class="form-item">
+                            <label for="course">Course</label>
+                            <select name="course" id="course" class="form-control" required>
+                                <option value="">Select Course</option>
+                                {% for course in courses %}
+                                <option value="{{ course.id }}">{{ course.course_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-item">
+                            <label for="batch">Batch</label>
+                            <select name="batch" id="batch" class="form-control" required>
+                                <option value="">Select Batch</option>
+                                {% for batch in batches %}
+                                <option value="{{ batch.id }}">{{ batch.batch_name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <div class="form-item">
+                            <label for="duration_minutes">Duration (minutes)</label>
+                            <input type="number" name="duration_minutes" id="duration_minutes" class="form-control" value="60" min="1" required />
+                        </div>
                     </div>
-                </div>
-            </div>
-            <!-- Questions Card -->
-            <div class="card">
-                <div class="card-content">
-                    <div class="questions-header">
-                        <h3>Add Questions</h3>
+                    <div class="form-group mt-3">
+                        <label for="excel_file">Upload Test File</label>
+                        <input type="file" name="excel_file" id="excel_file" accept=".csv" class="form-control" required />
                     </div>
-                    <div class="questions-container" id="questionsContainer">
-                        <!-- Questions will be dynamically added here by JS -->
+                    <div class="form-actions mt-3">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-file-import"></i> Create Test from File</button>
                     </div>
-                    <button type="button" class="button outline" id="addQuestionBtn">
-                        <span class="icon">+</span>
-                        Add Question
-                    </button>
-                </div>
+                </form>
             </div>
-            <!-- Submit Button -->
-            <div class="form-actions">
-                <button type="submit" class="create-button">Create Test</button>
+        </div>
+
+        <!-- Manual Creation Section -->
+        <div class="card">
+            <div class="card-header">
+                <h3>Or Create Manually</h3>
             </div>
-        </form>
+            <div class="card-content">
+                <form id="testForm" method="post" action="{% url 'create_test' %}">
+                    {% csrf_token %}
+                    <!-- Test Details Card -->
+                    <div class="card">
+                        <div class="card-content">
+                            <div class="form-grid">
+                                {% for field in form.visible_fields %}
+                                <div class="form-item">
+                                    {{ field.label_tag }} {% if field.name == "duration_minutes" %}
+                                    <div style="display: flex; align-items: center">
+                                        {{ field|add_class:"form-control" }}
+                                        <span style="margin-left: 8px">minutes</span>
+                                    </div>
+                                    {% else %} {{ field|add_class:"form-control" }} {% endif %} {% if field.errors %}
+                                    <div class="error-message">{{ field.errors }}</div>
+                                    {% endif %}
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                    </div>
+                    <!-- Questions Card -->
+                    <div class="card mt-4">
+                        <div class="card-content">
+                            <div class="questions-container" id="questionsContainer">
+                                <!-- Questions will be dynamically added here by JS -->
+                            </div>
+                            <button type="button" class="button outline" id="addQuestionBtn">
+                                <span class="icon">+</span>
+                                Add Question
+                            </button>
+                        </div>
+                    </div>
+                    <!-- Submit Button -->
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i> Create Test Manually</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
+
+<style>
+    .template-download {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        background-color: #f8f9fa;
+        border-radius: 8px;
+    }
+
+    .template-info {
+        flex: 1;
+    }
+
+    .template-info h3 {
+        margin-bottom: 10px;
+        color: #2c3e50;
+    }
+
+    .template-info p {
+        margin-bottom: 15px;
+    }
+
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 20px;
+        border-radius: 6px;
+        font-weight: 500;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        color: white;
+        border: none;
+    }
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+        transform: translateY(-1px);
+    }
+
+    .import-form {
+        margin-bottom: 20px;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 10px;
+        margin-top: 20px;
+    }
+
+    .card {
+        background: white;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        margin-bottom: 20px;
+    }
+
+    .card-content {
+        padding: 20px;
+    }
+
+    .card-header {
+        padding: 15px 20px;
+        border-bottom: 1px solid #eee;
+    }
+
+    .card-header h3 {
+        margin: 0;
+        color: #2c3e50;
+    }
+</style>
 
 <script>
     // Helper to get letter (A, B, C, ...)
